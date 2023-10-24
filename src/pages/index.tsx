@@ -1,37 +1,26 @@
 import { Box, Button, Typography } from "@mui/material";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const data = useSession();
-  console.log(data);
+  const router = useRouter();
   const { data: session } = useSession();
-  console.log(session);
-  if (!session)
+  if (!session) {
     return (
       <Box>
         <Typography>not sign in</Typography>
         <Button
           variant="contained"
           onClick={() => {
-            signIn();
+            signIn("google", { callbackUrl: "/" });
           }}
         >
           sign in
         </Button>
       </Box>
     );
-
-  return (
-    <>
-      <Box>Home</Box>
-      <Button
-        variant="contained"
-        onClick={() => {
-          signo;
-        }}
-      >
-        sign out
-      </Button>
-    </>
-  );
+  } else {
+    router.push("/back-office/orders");
+  }
 }

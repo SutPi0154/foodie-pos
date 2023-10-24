@@ -1,10 +1,22 @@
 import { configureStore } from "@reduxjs/toolkit";
+import AddonCategoryReducer from "./slices/addonCategorySlice";
+import AddonReducer from "./slices/addonSlice";
+import appReducer from "./slices/appSlice";
+import LocationReducer from "./slices/locationSlice";
+import MenuCategoryReducer from "./slices/menuCategorySlice";
 import MenuReducer from "./slices/menuSlices";
+import TableReducer from "./slices/tableSlice";
 // ...
 
 export const store = configureStore({
   reducer: {
+    app: appReducer,
     menus: MenuReducer,
+    menuCategories: MenuCategoryReducer,
+    addons: AddonReducer,
+    addonCategories: AddonCategoryReducer,
+    locations: LocationReducer,
+    tables: TableReducer,
   },
 });
 
