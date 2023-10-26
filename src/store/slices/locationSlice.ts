@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState: LocationSlice = {
   items: [],
   isLoading: false,
-  error: null,
+  isError: null,
 };
 export const createNewLocation = createAsyncThunk(
   "location/createLocation",

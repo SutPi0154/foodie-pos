@@ -3,7 +3,7 @@ import { Menu } from "@prisma/client";
 export interface MenuSlice {
   items: Menu[];
   isLoading: boolean;
-  error: Error | null;
+  isError: Error | null;
 }
 
 export interface BaseOptions {
@@ -18,4 +18,14 @@ export interface CreateNewMenuOption extends BaseOptions {
   name: string;
   price: number;
   menuCategoryIds: number[];
+}
+
+export interface UpdateMenuOption extends BaseOptions {
+  id: number;
+  name: string;
+  price: number;
+  menuCategoryIds: number[];
+}
+export interface DeleteMenuOption extends BaseOptions {
+  id: number;
 }

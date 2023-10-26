@@ -1,4 +1,5 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createMenuThunk } from "@/store/slices/menuSlices";
 import { CreateNewMenuOption } from "@/types/menu";
 import {
   Box,
@@ -34,8 +35,16 @@ const NewMenu = ({ open, setOpen }: Props) => {
     const selectedIds = e.target.value as number[];
     setNewMenu({ ...newMenu, menuCategoryIds: selectedIds });
   };
+  const dispatch = useAppDispatch();
   const handleCreateMenu = () => {
-    console.log(newMenu);
+    dispatch(
+      createMenuThunk({
+        ...newMenu,
+        onError: () => {
+          return setOpen(false);
+        },
+      })
+    );
   };
 
   return (
@@ -50,12 +59,14 @@ const NewMenu = ({ open, setOpen }: Props) => {
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <TextField
           label="name"
+          type="text"
           onChange={(e) => {
             setNewMenu({ ...newMenu, name: e.target.value });
           }}
         />
         <TextField
           label="price"
+          type="number"
           onChange={(e) => {
             setNewMenu({ ...newMenu, price: Number(e.target.value) });
           }}

@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: TableSlice = {
   items: [],
   isLoading: false,
-  error: null,
+  isError: null,
 };
 
 const tableSlice = createSlice({

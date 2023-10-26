@@ -8,7 +8,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState: MenuCategorySlice = {
   items: [],
   isLoading: false,
-  error: null,
+  isError: null,
 };
 
 export const createMenuCategory = createAsyncThunk(
@@ -22,7 +22,6 @@ export const createMenuCategory = createAsyncThunk(
         body: JSON.stringify({ name, locationId }),
       });
       const menuCategory = await api.json();
-      console.log(menuCategory);
       thunkApi.dispatch(addMenuCategory(menuCategory));
       onSuccess && onSuccess();
     } catch (error) {

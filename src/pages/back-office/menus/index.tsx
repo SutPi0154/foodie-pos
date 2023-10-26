@@ -8,6 +8,7 @@ import { useState } from "react";
 const MenusPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const menus = useAppSelector((store) => store.menus.items);
+  if (!menus) return null;
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -20,7 +21,7 @@ const MenusPage = () => {
           New Menu
         </Button>
       </Box>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
         {menus.map((item) => (
           <ItemCard
             icon={<RestaurantMenuIcon />}

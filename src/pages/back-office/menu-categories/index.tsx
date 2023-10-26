@@ -6,7 +6,6 @@ import { useState } from "react";
 const MenuCategoriesPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const menuCategories = useAppSelector((store) => store.menuCategories.items);
-  console.log(menuCategories);
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: AddonCategorySlice = {
   items: [],
   isLoading: false,
-  error: null,
+  isError: null,
 };
 
 const addonCategorySlice = createSlice({

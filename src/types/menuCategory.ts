@@ -3,7 +3,7 @@ import { MenuCategory } from "@prisma/client";
 export interface MenuCategorySlice {
   items: MenuCategory[];
   isLoading: boolean;
-  error: Error | null;
+  isError: Error | null;
 }
 
 export interface BaseOptions {

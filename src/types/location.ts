@@ -3,7 +3,7 @@ import { Location } from "@prisma/client";
 export interface LocationSlice {
   items: Location[];
   isLoading: boolean;
-  error: Error | null;
+  isError: Error | null;
 }
 
 export interface BaseOptions {

@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  Typography,
 } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 interface Props {
@@ -40,7 +39,7 @@ const NewLocation = ({ open, setOpen }: Props) => {
     >
       <DialogTitle>Create new Location </DialogTitle>
       <DialogContent>
-        <Typography>
+        <Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               label="name"
@@ -90,7 +89,7 @@ const NewLocation = ({ open, setOpen }: Props) => {
               confirm
             </Button>
           </Box>
-        </Typography>
+        </Box>
       </DialogContent>
     </Dialog>
   );

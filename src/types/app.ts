@@ -1,7 +1,7 @@
 export interface AppSlice {
   init: boolean;
   isLoading: boolean;
-  error: Error | null;
+  isError: Error | null;
 }
 export interface BaseOptions {
   onSuccess?: (data?: any) => void;

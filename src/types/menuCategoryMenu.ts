@@ -1,7 +1,7 @@
-import { Table } from "@prisma/client";
+import { MenuCategoryMenu } from "@prisma/client";
 
-export interface TableSlice {
-  items: Table[];
+export interface MenuCategoryMenuSlice {
+  items: MenuCategoryMenu[];
   isLoading: boolean;
   isError: Error | null;
 }

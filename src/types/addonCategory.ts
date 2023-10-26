@@ -3,7 +3,7 @@ import { AddonCategory } from "@prisma/client";
 export interface AddonCategorySlice {
   items: AddonCategory[];
   isLoading: boolean;
-  error: Error | null;
+  isError: Error | null;
 }
 
 export interface BaseOptions {
