@@ -3,22 +3,26 @@ import AddonCategoryReducer from "./slices/addonCategorySlice";
 import AddonReducer from "./slices/addonSlice";
 import appReducer from "./slices/appSlice";
 import LocationReducer from "./slices/locationSlice";
+import MenuAddonCategoryReducer from "./slices/menuAddonCategorySlice";
 import MenuCategoryMenuReducer from "./slices/menuCategoryMenuSlice";
 import MenuCategoryReducer from "./slices/menuCategorySlice";
 import MenuReducer from "./slices/menuSlices";
+import snackbarSliceReducer from "./slices/snackbarSlice";
 import TableReducer from "./slices/tableSlice";
 // ...
 
 export const store = configureStore({
   reducer: {
     app: appReducer,
-    menus: MenuReducer,
-    menuCategories: MenuCategoryReducer,
-    addons: AddonReducer,
-    addonCategories: AddonCategoryReducer,
-    locations: LocationReducer,
-    tables: TableReducer,
-    menuCategoryMenus: MenuCategoryMenuReducer,
+    menu: MenuReducer,
+    menuCategory: MenuCategoryReducer,
+    addon: AddonReducer,
+    addonCategory: AddonCategoryReducer,
+    location: LocationReducer,
+    table: TableReducer,
+    menuCategoryMenu: MenuCategoryMenuReducer,
+    menuAddonCategory: MenuAddonCategoryReducer,
+    snackbar: snackbarSliceReducer,
   },
 });
 

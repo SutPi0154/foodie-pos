@@ -1,26 +1,35 @@
+import ItemCard from "@/components/ItemCard";
 import NewAddonCategory from "@/components/NewAddonCategory";
 import { useAppSelector } from "@/store/hooks";
-import { Box, Button, Typography } from "@mui/material";
+import ClassIcon from "@mui/icons-material/Class";
+import { Box, Button } from "@mui/material";
+
 import { useState } from "react";
 const AddonCategoriesPage = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const addonCategories = useAppSelector(
-    (store) => store.addonCategories.items
-  );
+  const addonCategories = useAppSelector((store) => store.addonCategory.items);
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {addonCategories.map((item) => (
-          <Typography key={item.id}>{item.name}</Typography>
-        ))}
         <Button
           variant="contained"
+          sx={{ mb: 4 }}
           onClick={() => {
             setOpen(true);
           }}
         >
           New Addon category
         </Button>
+      </Box>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+        {addonCategories.map((item) => (
+          <ItemCard
+            title={item.name}
+            icon={<ClassIcon />}
+            href={`/back-office/addon-categories/${item.id}`}
+            key={item.id}
+          />
+        ))}
       </Box>
       <NewAddonCategory open={open} setOpen={setOpen} />
     </Box>

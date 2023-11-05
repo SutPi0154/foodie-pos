@@ -1,5 +1,7 @@
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import { createMenuCategory } from "@/store/slices/menuCategorySlice";
+import { toggleSnackbar } from "@/store/slices/snackbarSlice";
+import { CreateMenuCategoryOptions } from "@/types/menuCategory";
 import {
   Box,
   Button,
@@ -8,25 +10,39 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
+const defaultMenuCategory = {
+  name: "",
+  locationId: undefined,
+};
 const NewMenuCategory = ({ open, setOpen }: Props) => {
-  const menuCategories = useAppSelector((state) => state.menuCategories.items);
-  const [name, setName] = useState<string>("");
-  const onSuccess = () => {
-    setOpen(false);
-  };
+  const [newMenuCategory, setNewMenuCategory] =
+    useState<CreateMenuCategoryOptions>(defaultMenuCategory);
   const dispatch = useAppDispatch();
+
+  console.log(newMenuCategory);
+  useEffect(() => {
+    setNewMenuCategory((prevData) => ({
+      ...prevData,
+      locationId: Number(localStorage.getItem("selectedLocationId")),
+    }));
+  }, []);
+
   const handleCreateMenuCategory = () => {
-    const selectedLocationId = localStorage.getItem("LocationId");
+    console.log(newMenuCategory);
     dispatch(
       createMenuCategory({
-        name: name,
-        locationId: Number(selectedLocationId),
-        onSuccess,
+        ...newMenuCategory,
+        onSuccess: () => {
+          setOpen(false);
+          dispatch(
+            toggleSnackbar({ message: "Created menu category successfully" })
+          );
+        },
       })
     );
   };
@@ -41,7 +57,7 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
             sx={{ width: 400 }}
             variant="outlined"
             onChange={(e) => {
-              setName(e.target.value);
+              setNewMenuCategory({ ...newMenuCategory, name: e.target.value });
             }}
           />
         </Box>
@@ -56,6 +72,7 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
         >
           <Button
             sx={{}}
+            color="info"
             onClick={() => {
               setOpen(false);
             }}
@@ -65,7 +82,7 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
           </Button>
           <Button
             sx={{}}
-            disabled={!name}
+            // disabled={}
             onClick={handleCreateMenuCategory}
             variant="contained"
           >

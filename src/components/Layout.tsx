@@ -15,11 +15,12 @@ const Layout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
   const { init } = useAppSelector((store) => store.app);
+
   useEffect(() => {
     if (session && !init) {
       dispatch(fetchAppData({}));
     }
-  }, [session]);
+  }, [session, dispatch, init]);
 
   return (
     <Box>

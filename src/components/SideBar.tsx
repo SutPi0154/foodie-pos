@@ -21,7 +21,7 @@ const SideBar = () => {
   return (
     <Box
       sx={{
-        width: 280,
+        width: 350,
         bgcolor: "success.main",
         height: "100vh",
         borderTopRightRadius: 20,

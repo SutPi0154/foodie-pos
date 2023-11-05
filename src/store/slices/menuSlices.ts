@@ -7,6 +7,8 @@ import {
 } from "@/types/menu";
 import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { removeMenuAddonCategory } from "./menuAddonCategorySlice";
 import {
   addMenuCategoryMenus,
   replaceMenuCategoryMenu,
@@ -38,49 +40,50 @@ export const createMenuThunk = createAsyncThunk(
   async (options: CreateNewMenuOption, thunkApi) => {
     const { name, price, menuCategoryIds, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/menus`, {
+      const response = await fetch(`${config.apiBaseUrl}/menu`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, price, menuCategoryIds }),
       });
-      const { menu, menuCategoryMenu } = await response.json();
+      const { menu, menuCategoryMenus } = await response.json();
       thunkApi.dispatch(addMenu(menu));
-      thunkApi.dispatch(addMenuCategoryMenus(menuCategoryMenu));
+      thunkApi.dispatch(addMenuCategoryMenus(menuCategoryMenus));
       onSuccess && onSuccess();
+      console.log("success");
     } catch (err) {
       onError && onError();
     }
   }
 );
-export const UpdateMenuThunk = createAsyncThunk(
+export const updateMenuThunk = createAsyncThunk(
   "menus/updateMenu",
   async (options: UpdateMenuOption, thunkApi) => {
     const { id, name, menuCategoryIds, price, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/menus`, {
+      const response = await fetch(`${config.apiBaseUrl}/menu`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ id, name, menuCategoryIds, price }),
       });
-      const { menus, menuCategoryMenu } = await response.json();
-      thunkApi.dispatch(replaceMenu(menus));
-      thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenu));
+      const { menu, menuCategoryMenus } = await response.json();
+      thunkApi.dispatch(replaceMenu(menu));
+      thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenus));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
     }
   }
 );
-export const DeleteMenuThunk = createAsyncThunk(
+export const deleteMenuThunk = createAsyncThunk(
   "menus/deleteMenu",
   async (options: DeleteMenuOption, thunkApi) => {
     const { id, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/menus?id=${id}`, {
+      const response = await fetch(`${config.apiBaseUrl}/menu?id=${id}`, {
         method: "DELETE",
       });
-      // const { menus, menuCategoryMenu } = await response.json();
       thunkApi.dispatch(removeMenus({ id }));
+      thunkApi.dispatch(removeMenuAddonCategory({ menuId: id }));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

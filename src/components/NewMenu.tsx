@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createMenuThunk } from "@/store/slices/menuSlices";
+import { toggleSnackbar } from "@/store/slices/snackbarSlice";
 import { CreateNewMenuOption } from "@/types/menu";
 import {
   Box,
@@ -28,7 +29,7 @@ const defaultNewMenu: CreateNewMenuOption = {
   menuCategoryIds: [],
 };
 const NewMenu = ({ open, setOpen }: Props) => {
-  const menuCategories = useAppSelector((state) => state.menuCategories.items);
+  const menuCategories = useAppSelector((state) => state.menuCategory.items);
 
   const [newMenu, setNewMenu] = useState(defaultNewMenu);
   const handleChange = (e: SelectChangeEvent<number[]>) => {
@@ -36,12 +37,14 @@ const NewMenu = ({ open, setOpen }: Props) => {
     setNewMenu({ ...newMenu, menuCategoryIds: selectedIds });
   };
   const dispatch = useAppDispatch();
+
   const handleCreateMenu = () => {
     dispatch(
       createMenuThunk({
         ...newMenu,
-        onError: () => {
-          return setOpen(false);
+        onSuccess: () => {
+          setOpen(false);
+          dispatch(toggleSnackbar({ message: "Created menu successfully" }));
         },
       })
     );
@@ -60,6 +63,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
         <TextField
           label="name"
           type="text"
+          sx={{ mt: 2 }}
           onChange={(e) => {
             setNewMenu({ ...newMenu, name: e.target.value });
           }}
@@ -109,6 +113,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
         </FormControl>
         <Box
           sx={{
+            mt: 2,
             display: "flex",
             gap: 2,
             justifyContent: "center",
@@ -117,6 +122,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
         >
           <Button
             variant="contained"
+            color="info"
             onClick={() => {
               setOpen(false);
             }}

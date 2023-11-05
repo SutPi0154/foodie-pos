@@ -1,5 +1,6 @@
 import { useAppDispatch } from "@/store/hooks";
 import { createNewLocation } from "@/store/slices/locationSlice";
+import { toggleSnackbar } from "@/store/slices/snackbarSlice";
 import {
   Box,
   Button,
@@ -81,6 +82,11 @@ const NewLocation = ({ open, setOpen }: Props) => {
                     onSuccess: () => {
                       setOpen(false);
                       setNewLocation(defaultNewLocation);
+                      dispatch(
+                        toggleSnackbar({
+                          message: "Create new location successfully",
+                        })
+                      );
                     },
                   })
                 );

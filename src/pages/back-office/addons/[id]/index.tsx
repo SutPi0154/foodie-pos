@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { deleteMenuThunk, updateMenuThunk } from "@/store/slices/menuSlices";
+import { deleteAddonThunk, updateAddonThunk } from "@/store/slices/addonSlice";
 import { toggleSnackbar } from "@/store/slices/snackbarSlice";
-import { UpdateMenuOption } from "@/types/menu";
+import { UpdateAddonOption } from "@/types/addon";
 import {
   Box,
   Button,
@@ -18,40 +18,34 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { MenuCategory } from "@prisma/client";
+import { AddonCategory } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-const MenuDetail = () => {
+const AddonDetail = () => {
   const router = useRouter();
-  const menuId = Number(router.query.id);
-  const menus = useAppSelector((store) => store.menu.items);
-  const menuCategoryMenus = useAppSelector(
-    (store) => store.menuCategoryMenu.items
-  );
-  const menuCategories = useAppSelector((store) => store.menuCategory.items);
-  const [data, setData] = useState<UpdateMenuOption>();
+  const addonId = Number(router.query.id);
+  const addons = useAppSelector((store) => store.addon.items);
+
+  const addonCategories = useAppSelector((store) => store.addonCategory.items);
+  const [data, setData] = useState<UpdateAddonOption>();
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
 
-  const menu = menus.find((item) => item.id === menuId);
-
-  const CurrentMenuCategoryMenu = useMemo(() => {
-    return menuCategoryMenus.filter((item) => item.menuId === menuId);
-  }, [menuCategoryMenus, menuId]);
+  const addon = addons.find((item) => item.id === addonId);
 
   useEffect(() => {
-    if (menu) {
-      const menuCategoryIds = CurrentMenuCategoryMenu.map(
-        (item) => item.menuCategoryId
-      );
-      setData({ ...menu, menuCategoryIds });
+    if (addon) {
+      setData({
+        id: addon.id,
+        name: addon.name,
+        price: addon.price,
+        addonCategoryId: addon.addonCategoryId,
+      });
     }
-  }, [menu, CurrentMenuCategoryMenu]);
+  }, [addon]);
 
-  console.log(CurrentMenuCategoryMenu, menu);
-
-  if (!menu || !data) {
+  if (!addon || !data)
     return (
       <Box
         sx={{
@@ -64,16 +58,14 @@ const MenuDetail = () => {
         <CircularProgress />
       </Box>
     );
-  }
-
-  const handleChange = (e: SelectChangeEvent<number[]>) => {
-    const selectedId = e.target.value as number[];
-    setData({ ...data, id: menuId, menuCategoryIds: selectedId });
+  const handleChange = (e: SelectChangeEvent<number>) => {
+    const selectedId = e.target.value as number;
+    setData({ ...data, id: addon.id, addonCategoryId: selectedId });
   };
 
-  const handleUpdateMenu = () => {
+  const handleUpdateAddon = () => {
     dispatch(
-      updateMenuThunk({
+      updateAddonThunk({
         ...data,
         onSuccess: () => {
           dispatch(toggleSnackbar({ message: "Updated menu successfully" }));
@@ -81,13 +73,13 @@ const MenuDetail = () => {
       })
     );
   };
-  const handleDeleteMenu = () => {
+  const handleDeleteAddon = () => {
     dispatch(
-      deleteMenuThunk({
-        id: menuId,
+      deleteAddonThunk({
+        id: addon.id,
         onSuccess: () => {
-          router.push("/back-office/menus");
-          dispatch(toggleSnackbar({ message: "Deleted menu successfully" }));
+          router.push("/back-office/addons");
+          dispatch(toggleSnackbar({ message: "Deleted addon successfully" }));
         },
       })
     );
@@ -123,44 +115,38 @@ const MenuDetail = () => {
       <TextField
         label="name"
         sx={{ width: 400 }}
-        defaultValue={menu.name}
+        defaultValue={data.name}
         onChange={(e) => {
-          setData({ ...data, name: e.target.value });
+          setData({ ...data, id: addon.id, name: e.target.value });
         }}
       />
       <TextField
         label="price"
         sx={{ width: 400 }}
-        defaultValue={menu.price}
+        defaultValue={data.price}
         onChange={(e) => {
-          setData({ ...data, price: Number(e.target.value) });
+          setData({ ...data, id: addon.id, price: Number(e.target.value) });
         }}
         type="number"
       />
       <FormControl>
-        <InputLabel>Menu Category</InputLabel>
+        <InputLabel>Addon Category</InputLabel>
         <Select
-          multiple
           onChange={handleChange}
-          label="menuCategory"
-          value={data.menuCategoryIds}
+          label="Addon Category"
+          value={data.addonCategoryId}
           sx={{ width: 400 }}
-          renderValue={(selectedIds) => {
-            return selectedIds
-              .map((selectedId) => {
-                return menuCategories.find(
-                  (item) => item.id === selectedId
-                ) as MenuCategory;
-              })
-              .map((item) => item.name)
-              .join(", ");
+          renderValue={(selectedAddonCategoryId) => {
+            return (
+              addonCategories.find(
+                (item) => item.id === selectedAddonCategoryId
+              ) as AddonCategory
+            ).name;
           }}
         >
-          {menuCategories.map((item) => (
+          {addonCategories.map((item) => (
             <MenuItem key={item.id} value={item.id}>
-              <Checkbox
-                checked={data.menuCategoryIds?.includes(item.id)}
-              ></Checkbox>
+              <Checkbox checked={data.addonCategoryId === item.id}></Checkbox>
               <ListItemText primary={item.name}></ListItemText>
             </MenuItem>
           ))}
@@ -179,7 +165,7 @@ const MenuDetail = () => {
         >
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleUpdateMenu}>
+        <Button variant="contained" onClick={handleUpdateAddon}>
           Update
         </Button>
       </Box>
@@ -191,7 +177,7 @@ const MenuDetail = () => {
       >
         <DialogTitle>Confirm delete</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this menu?
+          Are you sure you want to delete this addon?
         </DialogContent>
         <Box
           sx={{
@@ -213,7 +199,7 @@ const MenuDetail = () => {
           </Button>
           <Button
             variant="contained"
-            onClick={handleDeleteMenu}
+            onClick={handleDeleteAddon}
             color="primary"
           >
             Confirm
@@ -224,4 +210,4 @@ const MenuDetail = () => {
   );
 };
 
-export default MenuDetail;
+export default AddonDetail;

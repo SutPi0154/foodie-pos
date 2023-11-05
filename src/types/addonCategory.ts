@@ -1,4 +1,5 @@
 import { AddonCategory } from "@prisma/client";
+import { BaseOptions } from "./app";
 
 export interface AddonCategorySlice {
   items: AddonCategory[];
@@ -6,7 +7,18 @@ export interface AddonCategorySlice {
   isError: Error | null;
 }
 
-export interface BaseOptions {
-  onSuccess?: (data?: any) => void;
-  onError?: (data?: any) => void;
+export interface CreateAddonCategoryOptions extends BaseOptions {
+  name: string;
+  isRequired: boolean;
+  menuIds: number[];
+}
+export interface UpdateAddonCategoryOption extends BaseOptions {
+  id: number;
+  name: string;
+  isRequired: boolean;
+  menuIds: number[];
+}
+
+export interface DeleteAddonCategoryOption extends BaseOptions {
+  id: number;
 }

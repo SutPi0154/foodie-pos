@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import SnackBar from "@/components/SnackBar";
 import { store } from "@/store";
 import { useLocalStorage } from "@/utils/localStorage";
 import { ThemeProvider } from "@emotion/react";
@@ -52,6 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={theme}>
           <Layout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
             <Component {...pageProps} />
+            <SnackBar />
           </Layout>
           <CssBaseline />
         </ThemeProvider>

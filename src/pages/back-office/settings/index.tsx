@@ -10,9 +10,9 @@ import { useEffect, useState } from "react";
 
 const SettingsPage = () => {
   const [selectedLocationId, setSelectedLocationId] = useState("");
-  const locations = useAppSelector((store) => store.locations.items);
+  const locations = useAppSelector((store) => store.location.items);
 
-  const handleLocationChange = (e: SelectChangeEvent<number>) => {
+  const handleChangeLocation = (e: SelectChangeEvent<number>) => {
     const id = String(e.target.value);
     localStorage.setItem("selectedLocationId", id);
     setSelectedLocationId(id);
@@ -36,7 +36,7 @@ const SettingsPage = () => {
       <Select
         value={Number(selectedLocationId)}
         label="Location"
-        onChange={handleLocationChange}
+        onChange={handleChangeLocation}
       >
         {locations.map((item) => (
           <MenuItem key={item.id} value={item.id}>

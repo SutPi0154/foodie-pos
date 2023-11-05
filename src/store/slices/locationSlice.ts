@@ -1,6 +1,12 @@
-import { CreateNewLocationOptions, LocationSlice } from "@/types/location";
+import {
+  CreateNewLocationOptions,
+  DeleteLocationOptions,
+  LocationSlice,
+  UpdateLocationOptions,
+} from "@/types/location";
 import { config } from "@/utils/config";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Location } from "@prisma/client";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState: LocationSlice = {
   items: [],
@@ -25,8 +31,41 @@ export const createNewLocation = createAsyncThunk(
     }
   }
 );
+export const updateLocationThunk = createAsyncThunk(
+  "locations/updateLocation",
+  async (options: UpdateLocationOptions, thunkApi) => {
+    const { id, name, address, companyId, onSuccess, onError } = options;
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/location`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id, name, address, companyId }),
+      });
+      const { location } = await response.json();
+      thunkApi.dispatch(replaceLocation(location));
+      onSuccess && onSuccess();
+    } catch (error) {
+      onError && onError();
+    }
+  }
+);
+export const deleteLocationThunk = createAsyncThunk(
+  "delete/deleteLocation",
+  async (options: DeleteLocationOptions, thunkApi) => {
+    const { id, onSuccess, onError } = options;
+    try {
+      await fetch(`${config.apiBaseUrl}/location?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(removeLocation({ id }));
+      onSuccess && onSuccess();
+    } catch (error) {
+      onError && onError();
+    }
+  }
+);
 
-const locationSlice = createSlice({
+const locationSlice: any = createSlice({
   name: "locationSlice",
   initialState,
   reducers: {
@@ -36,8 +75,17 @@ const locationSlice = createSlice({
     addLocation: (state, { payload }) => {
       state.items = [...state.items, payload];
     },
+    replaceLocation: (state, { payload }: PayloadAction<Location>) => {
+      state.items = state.items.filter((item) =>
+        item.id === payload.id ? payload : item
+      );
+    },
+    removeLocation: (state, { payload }: PayloadAction<{ id: number }>) => {
+      state.items = state.items.filter((item) => item.id !== payload.id);
+    },
   },
 });
 
-export const { setLocations, addLocation } = locationSlice.actions;
+export const { setLocations, addLocation, replaceLocation, removeLocation } =
+  locationSlice.actions;
 export default locationSlice.reducer;

@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const LocationsPage = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const locations = useAppSelector((store) => store.locations.items);
+  const locations = useAppSelector((store: any) => store.location.items);
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -21,10 +21,10 @@ const LocationsPage = () => {
         </Button>
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 5, mt: 2 }}>
-        {locations.map((item) => (
+        {locations.map((item: any) => (
           <ItemCard
             key={item.id}
-            href={`/${item.id}`}
+            href={`/back-office/locations/${item.id}`}
             title={item.name}
             icon={<LocationOnIcon />}
           ></ItemCard>

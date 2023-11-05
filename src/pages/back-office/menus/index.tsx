@@ -7,13 +7,14 @@ import { useState } from "react";
 
 const MenusPage = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const menus = useAppSelector((store) => store.menus.items);
+  const menus = useAppSelector((store) => store.menu.items);
   if (!menus) return null;
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="contained"
+          sx={{ mb: 4 }}
           onClick={() => {
             setOpen(true);
           }}
