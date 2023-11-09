@@ -24,7 +24,6 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
     useState<CreateMenuCategoryOptions>(defaultMenuCategory);
   const dispatch = useAppDispatch();
 
-  console.log(newMenuCategory);
   useEffect(() => {
     setNewMenuCategory((prevData) => ({
       ...prevData,
@@ -33,7 +32,6 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
   }, []);
 
   const handleCreateMenuCategory = () => {
-    console.log(newMenuCategory);
     dispatch(
       createMenuCategory({
         ...newMenuCategory,

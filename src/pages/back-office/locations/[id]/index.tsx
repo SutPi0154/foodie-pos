@@ -52,7 +52,6 @@ const LocationDetail = () => {
     );
 
   const handleUpdateTable = () => {
-    console.log(data);
     dispatch(
       updateLocationThunk({
         ...data,
@@ -131,7 +130,7 @@ const LocationDetail = () => {
           sx={{}}
           color="info"
           onClick={() => {
-            router.push("/back-office/tables");
+            router.push("/back-office/locations");
           }}
         >
           Cancel

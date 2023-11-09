@@ -18,13 +18,12 @@ const TableDetail = () => {
   const router = useRouter();
   const tableId = Number(router.query.id);
   const tables = useAppSelector((store) => store.table.items);
-  const locations = useAppSelector((store) => store.location.items);
+  const locations = useAppSelector((store: any) => store.location.items);
   const table = tables.find((item) => item.id === tableId);
   const [data, setData] = useState<UpdateTableOption>();
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
 
-  console.log(table);
   useEffect(() => {
     if (table) {
       setData({
@@ -34,7 +33,6 @@ const TableDetail = () => {
       });
     }
   }, [table]);
-  console.log(table);
 
   if (!table || !data)
     return (

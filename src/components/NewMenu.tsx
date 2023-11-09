@@ -2,10 +2,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createMenuThunk } from "@/store/slices/menuSlices";
 import { toggleSnackbar } from "@/store/slices/snackbarSlice";
 import { CreateNewMenuOption } from "@/types/menu";
+import { config } from "@/utils/config";
 import {
   Box,
   Button,
   Checkbox,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -19,6 +21,7 @@ import {
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { Dispatch, SetStateAction, useState } from "react";
+import FileDropZone from "./FileDropZone";
 interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -32,16 +35,29 @@ const NewMenu = ({ open, setOpen }: Props) => {
   const menuCategories = useAppSelector((state) => state.menuCategory.items);
 
   const [newMenu, setNewMenu] = useState(defaultNewMenu);
+  const [menuImage, setMenuImage] = useState<File>();
   const handleChange = (e: SelectChangeEvent<number[]>) => {
     const selectedIds = e.target.value as number[];
     setNewMenu({ ...newMenu, menuCategoryIds: selectedIds });
   };
   const dispatch = useAppDispatch();
 
-  const handleCreateMenu = () => {
+  const handleCreateMenu = async () => {
+    const newMenuPayload = { ...newMenu };
+    if (menuImage) {
+      const formData = new FormData();
+      formData.append("files", menuImage as Blob);
+      const response = await fetch(`${config.apiBaseUrl}/asset`, {
+        method: "POST",
+        body: formData,
+      });
+      const responseJson = await response.json();
+      const assetUrl = responseJson.assetUrl;
+      newMenuPayload.assetUrl = assetUrl;
+    }
     dispatch(
       createMenuThunk({
-        ...newMenu,
+        ...newMenuPayload,
         onSuccess: () => {
           setOpen(false);
           dispatch(toggleSnackbar({ message: "Created menu successfully" }));
@@ -50,6 +66,9 @@ const NewMenu = ({ open, setOpen }: Props) => {
     );
   };
 
+  const onFileSelected = (files: File[]) => {
+    setMenuImage(files[0]);
+  };
   return (
     <Dialog
       open={open}
@@ -91,8 +110,9 @@ const NewMenu = ({ open, setOpen }: Props) => {
                   ) as MenuCategory;
                   return menuCategory;
                 })
-                .map((item) => item.name)
-                .join(", ");
+                .map((item) => (
+                  <Chip key={item.id} label={item.name} sx={{ mr: 1 }}></Chip>
+                ));
             }}
             MenuProps={{
               PaperProps: {
@@ -111,6 +131,14 @@ const NewMenu = ({ open, setOpen }: Props) => {
             ))}
           </Select>
         </FormControl>
+        <FileDropZone onFileSelected={onFileSelected} />
+        {menuImage && (
+          <Chip
+            sx={{ mt: 2 }}
+            label={menuImage.name}
+            onDelete={() => setMenuImage(undefined)}
+          ></Chip>
+        )}
         <Box
           sx={{
             mt: 2,

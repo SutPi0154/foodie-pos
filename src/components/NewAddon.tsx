@@ -17,6 +17,7 @@ import {
   TextField,
 } from "@mui/material";
 import { AddonCategory } from "@prisma/client";
+import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState } from "react";
 interface Props {
   open: boolean;
@@ -31,6 +32,7 @@ const NewAddon = ({ open, setOpen }: Props) => {
   const [newAddon, setNewAddon] = useState<CreateAddonOptions>(defaultNewAddon);
   const addonCategories = useAppSelector((store) => store.addonCategory.items);
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const handleChange = (e: SelectChangeEvent<number>) => {
     const selectId = e.target.value as number;
     setNewAddon({ ...newAddon, addonCategoryId: selectId });

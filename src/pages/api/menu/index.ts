@@ -12,11 +12,11 @@ export default async function handler(
   if (!session) return res.status(401).send("Unauthorized");
   const method = req.method;
   if (method === "POST") {
-    const { name, price, menuCategoryIds } = req.body;
+    const { name, price, assetUrl, menuCategoryIds } = req.body;
     const isValid =
       name.trim() !== "" && price !== undefined && menuCategoryIds.length > 0;
     if (!isValid) return res.status(400).send("data is required");
-    const menu = await prisma.menu.create({ data: { name, price } });
+    const menu = await prisma.menu.create({ data: { name, price, assetUrl } });
     const newMenuCategoryMenu: { menuId: number; menuCategoryId: number }[] =
       menuCategoryIds.map((item: number) => ({
         menuId: menu.id,
@@ -65,6 +65,10 @@ export default async function handler(
     await prisma.menu.update({
       data: { isArchived: true },
       where: { id: menuId },
+    });
+    await prisma.menuCategoryMenu.updateMany({
+      data: { isArchived: true },
+      where: { menuId },
     });
     await prisma.menuAddonCategory.updateMany({
       data: { isArchived: true },

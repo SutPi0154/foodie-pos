@@ -1,8 +1,8 @@
-import { MenuCategory } from "@prisma/client";
+import { disabledLocationMenuCategory } from "@prisma/client";
 import { BaseOptions } from "./app";
 
-export interface MenuCategorySlice {
-  items: MenuCategory[];
+export interface DisableLocationMenuCategorySlice {
+  items: disabledLocationMenuCategory[];
   isLoading: boolean;
   isError: Error | null;
 }
@@ -17,7 +17,6 @@ export interface UpdateMenuCategoryOptions extends BaseOptions {
   name: string;
   companyId?: number;
   isAvailable: boolean;
-  locationId: number;
 }
 export interface DeleteMenuCategoryOption extends BaseOptions {
   id: number;

@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { prisma } from "@/utils/db";
+import { getQrCodeUrl, qrCodeImageUpload } from "@/utils/fileUpload";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
@@ -73,7 +74,7 @@ export default async function handler(
         { name: addonTwo, addonCategoryId: addonCategory.id },
         { name: addonThree, addonCategoryId: addonCategory.id },
       ];
-      const addons = await prisma.$transaction(
+      const addon = await prisma.$transaction(
         newAddonData.map((addon) => prisma.addon.create({ data: addon }))
       );
 
@@ -87,10 +88,15 @@ export default async function handler(
         },
       });
       // 10. crate table
-
       const newTableName = "Default Table Name";
       const table = await prisma.table.create({
-        data: { name: newTableName, locationId: location.id },
+        data: { name: newTableName, locationId: location.id, assetUrl: "" },
+      });
+      await qrCodeImageUpload(company.id, table.id);
+      const assetUrl = getQrCodeUrl(company.id, table.id);
+      await prisma.table.update({
+        data: { assetUrl },
+        where: { id: table.id },
       });
       return res.status(200).json({
         location,
@@ -99,53 +105,59 @@ export default async function handler(
         menuCategoryMenu,
         addonCategory,
         menuAddonCategory,
-        addons,
+        addon,
+        table,
       });
     } else {
       const companyId = dbUser.companyId;
-      const locations = await prisma.location.findMany({
+      const location = await prisma.location.findMany({
         where: { companyId, isArchived: false },
       });
-      const locationIds = locations.map((item) => item.id);
-      const menuCategories = await prisma.menuCategory.findMany({
+      const locationIds = location.map((item) => item.id);
+      const menuCategory = await prisma.menuCategory.findMany({
         where: { companyId, isArchived: false },
       });
-      const menuCategoryIds = menuCategories.map((item) => item.id);
-      const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
+      const menuCategoryIds = menuCategory.map((item) => item.id);
+      const menuCategoryMenu = await prisma.menuCategoryMenu.findMany({
         where: { menuCategoryId: { in: menuCategoryIds }, isArchived: false },
       });
-      const menuIds = menuCategoryMenus.map((item) => item.menuId);
-      const menus = await prisma.menu.findMany({
+      const menuIds = menuCategoryMenu.map((item) => item.menuId);
+      const menu = await prisma.menu.findMany({
         where: { id: { in: menuIds }, isArchived: false },
       });
-      const menuAddonCategories = await prisma.menuAddonCategory.findMany({
+      const menuAddonCategory = await prisma.menuAddonCategory.findMany({
         where: { menuId: { in: menuIds }, isArchived: false },
       });
-      const addonCategoryIds = menuAddonCategories.map(
+      const addonCategoryIds = menuAddonCategory.map(
         (item) => item.addonCategoryId
       );
 
-      const addonCategories = await prisma.addonCategory.findMany({
+      const addonCategory = await prisma.addonCategory.findMany({
         where: {
           id: { in: addonCategoryIds },
           isArchived: false,
         },
       });
-      const addons = await prisma.addon.findMany({
+      const addon = await prisma.addon.findMany({
         where: { addonCategoryId: { in: addonCategoryIds }, isArchived: false },
       });
-      const tables = await prisma.table.findMany({
+      const disableLocationMenuCategory =
+        await prisma.disabledLocationMenuCategory.findMany({
+          where: { menuCategoryId: { in: menuCategoryIds }, isArchived: false },
+        });
+      const table = await prisma.table.findMany({
         where: { locationId: { in: locationIds }, isArchived: false },
       });
       return res.status(200).json({
-        locations,
-        menuCategories,
-        menus,
-        menuCategoryMenus,
-        menuAddonCategories,
-        addonCategories,
-        addons,
-        tables,
+        location,
+        menuCategory,
+        menu,
+        menuCategoryMenu,
+        menuAddonCategory,
+        addonCategory,
+        disableLocationMenuCategory,
+        addon,
+        table,
       });
     }
   }

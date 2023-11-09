@@ -90,7 +90,7 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {session ? (
-                  <Avatar src={session.user?.image} />
+                  <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJIyiiNbz3VC9Afr-LqWpcw7loxjPnacfZSA&usqp=CAU" />
                 ) : (
                   <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJIyiiNbz3VC9Afr-LqWpcw7loxjPnacfZSA&usqp=CAU" />
                 )}

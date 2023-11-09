@@ -1,5 +1,4 @@
 import Layout from "@/components/Layout";
-import SnackBar from "@/components/SnackBar";
 import { store } from "@/store";
 import { useLocalStorage } from "@/utils/localStorage";
 import { ThemeProvider } from "@emotion/react";
@@ -13,6 +12,7 @@ import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
+import SnackBar from "../components/SnackBar";
 import "../styles/global.css";
 
 export default function App({ Component, pageProps }: AppProps) {

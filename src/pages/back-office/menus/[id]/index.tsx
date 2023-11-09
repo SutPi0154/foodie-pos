@@ -49,8 +49,6 @@ const MenuDetail = () => {
     }
   }, [menu, CurrentMenuCategoryMenu]);
 
-  console.log(CurrentMenuCategoryMenu, menu);
-
   if (!menu || !data) {
     return (
       <Box

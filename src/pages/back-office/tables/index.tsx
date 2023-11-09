@@ -8,7 +8,6 @@ import { useState } from "react";
 const TablesPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const tables = useAppSelector((store) => store.table.items);
-  console.log(tables);
   if (!tables) return;
   return (
     <Box>

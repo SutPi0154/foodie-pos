@@ -31,7 +31,6 @@ const NewTable = ({ open, setOpen }: Props) => {
     }));
   }, []);
 
-  console.log(newTable);
   const handleCreateTable = () => {
     dispatch(
       createTableThunk({

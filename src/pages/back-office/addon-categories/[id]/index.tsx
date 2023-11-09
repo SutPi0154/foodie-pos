@@ -34,21 +34,12 @@ const AddonCategoryDetail = () => {
   const addonCategory = addonCategories.find(
     (item) => item.id === addonCategoryId
   );
-  console.log(addonCategory);
   const menuAddonCategories = useAppSelector(
     (store) => store.menuAddonCategory.items
   );
 
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<UpdateAddonCategoryOption>();
-  // const menuIds = CurrentMenuAddonCategories.map((item) => item.menuId);
-  // const CurrentMenuAddonCategories = menuAddonCategories.filter(
-  //   (item) => item.addonCategoryId === addonCategoryId
-  // );
-
-  // const CurrentMenuCategoryMenu = useMemo(() => {
-  //   return menuCategoryMenus.filter((item) => item.menuId === menuId);
-  // }, [menuCategoryMenus, menuId]);
 
   const CurrentMenuAddonCategories = useMemo(() => {
     return menuAddonCategories.filter(
@@ -60,11 +51,8 @@ const AddonCategoryDetail = () => {
     if (addonCategory) {
       const menuIds = CurrentMenuAddonCategories.map((item) => item.menuId);
       setData({ ...addonCategory, menuIds });
-      console.log(menuIds);
     }
   }, [CurrentMenuAddonCategories, addonCategory]);
-  console.log(CurrentMenuAddonCategories, addonCategory);
-  console.log(menus);
 
   const dispatch = useAppDispatch();
   const handleDeleteAddonCategory = () => {

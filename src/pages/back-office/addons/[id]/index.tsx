@@ -160,7 +160,7 @@ const AddonDetail = () => {
           sx={{}}
           color="info"
           onClick={() => {
-            router.push("/back-office/menus");
+            router.push("/back-office/addons");
           }}
         >
           Cancel

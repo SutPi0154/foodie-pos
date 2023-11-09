@@ -19,8 +19,10 @@ const Layout = ({ children, isDarkMode, setDarkMode }: Props) => {
   useEffect(() => {
     if (session && !init) {
       dispatch(fetchAppData({}));
+      console.log(session);
+      console.log(init);
     }
-  }, [session, dispatch, init]);
+  }, [session, init, dispatch]);
 
   return (
     <Box>

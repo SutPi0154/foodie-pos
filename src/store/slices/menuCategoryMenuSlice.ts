@@ -1,4 +1,5 @@
 import { MenuCategoryMenuSlice } from "@/types/menuCategoryMenu";
+import { MenuCategoryMenu } from "@prisma/client";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: MenuCategoryMenuSlice = {
@@ -32,6 +33,16 @@ const menuCategoryMenu = createSlice({
         (item) => item.menuCategoryId !== payload.menuCategoryId
       );
     },
+    filterReplaceMenuCategoryMenu: (
+      state,
+      { payload }: PayloadAction<MenuCategoryMenu[]>
+    ) => {
+      const menuCategoryId = payload[0].menuCategoryId;
+      const otherMenuAddonCategory = state.items.filter(
+        (item) => item.menuCategoryId !== menuCategoryId
+      );
+      state.items = [...otherMenuAddonCategory, ...payload];
+    },
   },
 });
 
@@ -40,5 +51,6 @@ export const {
   addMenuCategoryMenus,
   replaceMenuCategoryMenu,
   removeMenuCategoryMenu,
+  filterReplaceMenuCategoryMenu,
 } = menuCategoryMenu.actions;
 export default menuCategoryMenu.reducer;

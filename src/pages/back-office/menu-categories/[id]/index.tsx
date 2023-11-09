@@ -12,6 +12,8 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
+  Switch,
   TextField,
 } from "@mui/material";
 import { useRouter } from "next/router";
@@ -30,10 +32,14 @@ const MenuCategoryDetail = () => {
 
   useEffect(() => {
     if (menuCategory) {
+      const locationId = Number(localStorage.getItem("selectedLocationId"));
+      console.log(locationId);
       setData({
         id: menuCategory.id,
         name: menuCategory.name,
         companyId: menuCategory.companyId,
+        isAvailable: false,
+        locationId,
       });
     }
   }, [menuCategory]);
@@ -53,6 +59,7 @@ const MenuCategoryDetail = () => {
     );
 
   const handleUpdateMenuCategory = () => {
+    console.log(data);
     dispatch(
       updateMenuCategoryThunk({
         ...data,
@@ -112,6 +119,17 @@ const MenuCategoryDetail = () => {
         onChange={(e) => {
           setData({ ...data, id: menuCategory.id, name: e.target.value });
         }}
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            defaultChecked
+            onChange={(e, value) => {
+              setData({ ...data, isAvailable: value });
+            }}
+          />
+        }
+        label="is available"
       />
 
       <Box

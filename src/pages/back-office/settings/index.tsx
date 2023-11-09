@@ -6,11 +6,14 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { Location } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 const SettingsPage = () => {
   const [selectedLocationId, setSelectedLocationId] = useState("");
-  const locations = useAppSelector((store) => store.location.items);
+  const locations: Location[] = useAppSelector(
+    (store: any) => store.location.items
+  );
 
   const handleChangeLocation = (e: SelectChangeEvent<number>) => {
     const id = String(e.target.value);

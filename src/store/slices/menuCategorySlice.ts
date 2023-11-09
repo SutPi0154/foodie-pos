@@ -7,7 +7,11 @@ import {
 import { config } from "@/utils/config";
 import { MenuCategory } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { removeMenuCategoryMenu } from "./menuCategoryMenuSlice";
+import { addDisableLocationMenuCategories } from "./disableLocationMenuCategorySlice";
+import {
+  removeMenuCategoryMenu,
+  replaceMenuCategoryMenu,
+} from "./menuCategoryMenuSlice";
 
 const initialState: MenuCategorySlice = {
   items: [],
@@ -37,15 +41,30 @@ export const createMenuCategory = createAsyncThunk(
 export const updateMenuCategoryThunk = createAsyncThunk(
   "menuCategory/updateMenuCategory",
   async (options: UpdateMenuCategoryOptions, thunkApi) => {
-    const { id, name, companyId, onSuccess, onError } = options;
+    const { id, name, companyId, isAvailable, locationId, onSuccess, onError } =
+      options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu-category`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id, name, companyId }),
+        body: JSON.stringify({ id, name, companyId, isAvailable, locationId }),
       });
-      const { menuCategory } = await response.json();
-      replaceMenuCategory(menuCategory);
+      const { menuCategory, menuCategoryMenu, disabledLocationMenuCategory } =
+        await response.json();
+      if (!menuCategoryMenu && !disabledLocationMenuCategory) {
+        thunkApi.dispatch(replaceMenuCategory(menuCategory));
+      } else if (!menuCategoryMenu && disabledLocationMenuCategory) {
+        thunkApi.dispatch(replaceMenuCategory(menuCategory));
+        thunkApi.dispatch(
+          addDisableLocationMenuCategories(disabledLocationMenuCategory)
+        );
+      } else {
+        thunkApi.dispatch(replaceMenuCategory(menuCategory));
+        thunkApi.dispatch(
+          addDisableLocationMenuCategories(disabledLocationMenuCategory)
+        );
+        thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenu));
+      }
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

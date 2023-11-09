@@ -1,7 +1,6 @@
-import ItemCard from "@/components/ItemCard";
+import MenuCard from "@/components/MenuCard";
 import NewMenu from "@/components/NewMenu";
 import { useAppSelector } from "@/store/hooks";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
@@ -24,10 +23,9 @@ const MenusPage = () => {
       </Box>
       <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
         {menus.map((item) => (
-          <ItemCard
-            icon={<RestaurantMenuIcon />}
+          <MenuCard
+            menu={item}
             href={`/back-office/menus/${item.id}`}
-            title={item.name}
             key={item.id}
           />
         ))}

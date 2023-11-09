@@ -38,18 +38,18 @@ export const getMenusThunk = createAsyncThunk(
 export const createMenuThunk = createAsyncThunk(
   "menus/createMenu",
   async (options: CreateNewMenuOption, thunkApi) => {
-    const { name, price, menuCategoryIds, onSuccess, onError } = options;
+    const { name, price, assetUrl, menuCategoryIds, onSuccess, onError } =
+      options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, price, menuCategoryIds }),
+        body: JSON.stringify({ name, assetUrl, price, menuCategoryIds }),
       });
       const { menu, menuCategoryMenus } = await response.json();
       thunkApi.dispatch(addMenu(menu));
       thunkApi.dispatch(addMenuCategoryMenus(menuCategoryMenus));
       onSuccess && onSuccess();
-      console.log("success");
     } catch (err) {
       onError && onError();
     }
