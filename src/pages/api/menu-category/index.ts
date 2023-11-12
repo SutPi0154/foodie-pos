@@ -63,6 +63,7 @@ export default async function handler(
       await prisma.menuCategoryMenu.deleteMany({
         where: { menuCategoryId: id, isArchived: true },
       });
+
       if (locationId && isAvailable === false) {
         const exist = await prisma.disabledLocationMenuCategory.findFirst({
           where: { menuCategoryId: id, locationId: locationId },
@@ -70,19 +71,20 @@ export default async function handler(
         if (exist) {
           res.status(200).json({
             menuCategory,
-            menuCategoryMenu,
             disabledLocationMenuCategory: exist,
           });
-        }
-        const disabledLocationMenuCategory =
-          await prisma.disabledLocationMenuCategory.create({
-            data: { menuCategoryId: id, locationId },
+          console.log(exist);
+        } else {
+          const disabledLocationMenuCategory =
+            await prisma.disabledLocationMenuCategory.create({
+              data: { menuCategoryId: id, locationId },
+            });
+          console.log(disabledLocationMenuCategory);
+          return res.status(200).json({
+            menuCategory,
+            disabledLocationMenuCategory,
           });
-        return res.status(200).json({
-          menuCategory,
-          menuCategoryMenu,
-          disabledLocationMenuCategory,
-        });
+        }
       } else if (locationId && isAvailable === true) {
         const exist = await prisma.disabledLocationMenuCategory.findFirst({
           where: { menuCategoryId: id, locationId: locationId },
@@ -92,9 +94,42 @@ export default async function handler(
             where: { id: exist.id },
           });
         }
-      } else {
         return res.status(200).json({ menuCategory, menuCategoryMenu });
       }
+      return res.status(200).json({ menuCategory, menuCategoryMenu });
+    }
+
+    if (locationId && isAvailable === false) {
+      const exist = await prisma.disabledLocationMenuCategory.findFirst({
+        where: { menuCategoryId: id, locationId: locationId },
+      });
+      if (exist) {
+        res.status(200).json({
+          menuCategory,
+          disabledLocationMenuCategory: exist,
+        });
+        console.log(exist);
+      } else {
+        const disabledLocationMenuCategory =
+          await prisma.disabledLocationMenuCategory.create({
+            data: { menuCategoryId: id, locationId },
+          });
+        console.log(disabledLocationMenuCategory);
+        return res.status(200).json({
+          menuCategory,
+          disabledLocationMenuCategory,
+        });
+      }
+    } else if (locationId && isAvailable === true) {
+      const exist = await prisma.disabledLocationMenuCategory.findFirst({
+        where: { menuCategoryId: id, locationId: locationId },
+      });
+      if (exist) {
+        await prisma.disabledLocationMenuCategory.delete({
+          where: { id: exist.id },
+        });
+      }
+      return res.status(200).json({ menuCategory });
     }
     return res.status(200).json({ menuCategory });
   } else if (method === "DELETE") {

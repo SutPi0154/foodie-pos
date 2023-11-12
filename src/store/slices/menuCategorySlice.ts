@@ -7,7 +7,10 @@ import {
 import { config } from "@/utils/config";
 import { MenuCategory } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addDisableLocationMenuCategories } from "./disableLocationMenuCategorySlice";
+import {
+  addDisableLocationMenuCategories,
+  removeDisableLocationMenuCategory,
+} from "./disableLocationMenuCategorySlice";
 import {
   removeMenuCategoryMenu,
   replaceMenuCategoryMenu,
@@ -51,20 +54,37 @@ export const updateMenuCategoryThunk = createAsyncThunk(
       });
       const { menuCategory, menuCategoryMenu, disabledLocationMenuCategory } =
         await response.json();
-      if (!menuCategoryMenu && !disabledLocationMenuCategory) {
-        thunkApi.dispatch(replaceMenuCategory(menuCategory));
-      } else if (!menuCategoryMenu && disabledLocationMenuCategory) {
-        thunkApi.dispatch(replaceMenuCategory(menuCategory));
+      console.log("disableLocationMenuCategory", disabledLocationMenuCategory);
+      if (!menuCategoryMenu && isAvailable === false) {
         thunkApi.dispatch(
           addDisableLocationMenuCategories(disabledLocationMenuCategory)
         );
-      } else {
+        thunkApi.dispatch(replaceMenuCategory(menuCategory));
+      } else if (!menuCategoryMenu && isAvailable === true) {
         thunkApi.dispatch(replaceMenuCategory(menuCategory));
         thunkApi.dispatch(
-          addDisableLocationMenuCategories(disabledLocationMenuCategory)
+          removeDisableLocationMenuCategory({
+            locationId,
+            menuCategoryId: id,
+          })
+        );
+      } else if (menuCategoryMenu && isAvailable === true) {
+        thunkApi.dispatch(
+          removeDisableLocationMenuCategory({
+            locationId: locationId,
+            menuCategoryId: id,
+          })
         );
         thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenu));
+        thunkApi.dispatch(replaceMenuCategory(menuCategory));
+      } else if (menuCategoryMenu && isAvailable === false) {
+        thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenu));
+        thunkApi.dispatch(replaceMenuCategory(menuCategory));
+        thunkApi.dispatch(
+          addDisableLocationMenuCategories(disabledLocationMenuCategory)
+        );
       }
+
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

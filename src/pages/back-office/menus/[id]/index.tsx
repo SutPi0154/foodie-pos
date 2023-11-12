@@ -11,11 +11,13 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   InputLabel,
   ListItemText,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Switch,
   TextField,
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
@@ -39,16 +41,30 @@ const MenuDetail = () => {
   const CurrentMenuCategoryMenu = useMemo(() => {
     return menuCategoryMenus.filter((item) => item.menuId === menuId);
   }, [menuCategoryMenus, menuId]);
+  const disableLocationMenu = useAppSelector(
+    (store) => store.disableLocationMenu.items
+  );
 
   useEffect(() => {
+    const selectedLocationId = Number(
+      localStorage.getItem("selectedLocationId")
+    );
     if (menu) {
+      const isDisable = disableLocationMenu.find(
+        (item) =>
+          item?.locationId === selectedLocationId && item.menuId === menuId
+      );
       const menuCategoryIds = CurrentMenuCategoryMenu.map(
         (item) => item.menuCategoryId
       );
-      setData({ ...menu, menuCategoryIds });
+      setData({
+        ...menu,
+        menuCategoryIds,
+        locationId: selectedLocationId,
+        isAvailable: isDisable ? false : true,
+      });
     }
-  }, [menu, CurrentMenuCategoryMenu]);
-
+  }, [menu, CurrentMenuCategoryMenu, disableLocationMenu, menuId]);
   if (!menu || !data) {
     return (
       <Box
@@ -70,6 +86,7 @@ const MenuDetail = () => {
   };
 
   const handleUpdateMenu = () => {
+    console.log(data);
     dispatch(
       updateMenuThunk({
         ...data,
@@ -164,6 +181,17 @@ const MenuDetail = () => {
           ))}
         </Select>
       </FormControl>
+      <FormControlLabel
+        control={
+          <Switch
+            defaultChecked={data.isAvailable}
+            onChange={(e, value) => {
+              setData({ ...data, isAvailable: value });
+            }}
+          />
+        }
+        label="is available"
+      />
       <Box
         sx={{ width: 400, display: "flex", justifyContent: "center", gap: 2 }}
       >

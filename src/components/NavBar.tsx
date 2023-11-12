@@ -115,7 +115,7 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
               >
                 <MenuItem
                   onClick={() => {
-                    signOut({ callbackUrl: "/" });
+                    signOut({ callbackUrl: "/back-office" });
                   }}
                 >
                   <Typography textAlign="center">Sign out</Typography>
@@ -140,7 +140,7 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
               >
                 <MenuItem
                   onClick={() => {
-                    signIn("google");
+                    signIn("google", { callbackUrl: "/back-office" });
                   }}
                 >
                   <Typography textAlign="center">Sign In</Typography>

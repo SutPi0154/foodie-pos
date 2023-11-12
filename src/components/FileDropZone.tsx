@@ -8,7 +8,6 @@ interface Prop {
 const FileDropZone = ({ onFileSelected }: Prop) => {
   const onDrop = (acceptedFiles: File[]) => {
     onFileSelected(acceptedFiles);
-    console.log(acceptedFiles);
   };
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

@@ -7,6 +7,9 @@ import { useState } from "react";
 const MenusPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const menus = useAppSelector((store) => store.menu.items);
+  const disableLocationMenus = useAppSelector(
+    (store) => store.disableLocationMenu.items
+  );
   if (!menus) return null;
   return (
     <Box>
@@ -22,13 +25,24 @@ const MenusPage = () => {
         </Button>
       </Box>
       <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-        {menus.map((item) => (
-          <MenuCard
-            menu={item}
-            href={`/back-office/menus/${item.id}`}
-            key={item.id}
-          />
-        ))}
+        {menus.map((item) => {
+          const isAvailable = disableLocationMenus.find(
+            (disableLocationMenu) =>
+              disableLocationMenu.locationId ===
+                Number(localStorage.getItem("selectedLocationId")) &&
+              disableLocationMenu.menuId === item.id
+          )
+            ? false
+            : true;
+          return (
+            <MenuCard
+              menu={item}
+              href={`/back-office/menus/${item.id}`}
+              isAvailable={isAvailable}
+              key={item.id}
+            />
+          );
+        })}
       </Box>
       <NewMenu open={open} setOpen={setOpen} />
     </Box>

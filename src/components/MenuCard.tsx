@@ -6,16 +6,17 @@ import PaidIcon from "@mui/icons-material/Paid";
 interface Props {
   menu: Menu;
   href: string | object;
+  isAvailable: boolean;
 }
 
-const MenuCard = ({ menu, href }: Props) => {
-  console.log(menu.price);
+const MenuCard = ({ menu, href, isAvailable }: Props) => {
   return (
     <Link
       key={menu.id}
       href={href}
       style={{
         textDecoration: "none",
+        opacity: isAvailable === false ? 0.4 : 1,
         marginRight: "15px",
         marginBottom: "20px",
       }}

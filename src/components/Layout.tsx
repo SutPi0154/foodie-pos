@@ -1,39 +1,36 @@
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { ReactNode, useEffect } from "react";
-import NavBar from "./NavBar";
-import SideBar from "./SideBar";
-
+import { useRouter } from "next/router";
+import BackOfficeLayout from "./BackOfficeLayout";
+import OrderLayout from "./OrderLayout";
 interface Props {
-  children: ReactNode;
+  children: string | JSX.Element | JSX.Element[];
   isDarkMode: boolean;
   setDarkMode: () => void;
 }
 const Layout = ({ children, isDarkMode, setDarkMode }: Props) => {
-  const { data: session } = useSession();
-  const dispatch = useAppDispatch();
-  const { init } = useAppSelector((store) => store.app);
-
-  useEffect(() => {
-    if (session && !init) {
-      dispatch(fetchAppData({}));
-      console.log(session);
-      console.log(init);
-    }
-  }, [session, init, dispatch]);
-
-  return (
-    <Box>
-      <NavBar isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
-      <Box sx={{ color: "" }}></Box>
-      <Box sx={{ display: "flex" }}>
-        {session && <SideBar />}
-        <Box sx={{ width: "100%", m: 4 }}> {children}</Box>
+  const router = useRouter();
+  const isOrderApp = router.pathname === "/order";
+  const isBackOfficeApp = router.pathname.includes("/back-office");
+  if (isOrderApp) {
+    return (
+      <Box>
+        <OrderLayout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
+          {children}
+        </OrderLayout>
       </Box>
-    </Box>
-  );
+    );
+  }
+
+  if (isBackOfficeApp) {
+    return (
+      <Box>
+        <BackOfficeLayout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
+          {children}
+        </BackOfficeLayout>
+      </Box>
+    );
+  }
+  return <Box>{children}</Box>;
 };
 
 export default Layout;

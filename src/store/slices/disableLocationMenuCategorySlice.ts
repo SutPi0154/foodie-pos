@@ -21,18 +21,26 @@ const disableLocationMenuCategorySlice = createSlice({
     ) => {
       state.items = [...state.items, payload];
     },
-    replaceDisableLocationMenuCategory: (state, { payload }) => {
-      // state.items = [...state.items, payload];
-    },
 
-    // removeMenuCategory: (state, { payload }: PayloadAction<{ id: number }>) => {
-    //   state.items = state.items.filter((item) => item.id !== payload.id);
-    // },
+    removeDisableLocationMenuCategory: (
+      state,
+      { payload }: PayloadAction<{ locationId: number; menuCategoryId: number }>
+    ) => {
+      const { locationId, menuCategoryId } = payload;
+      state.items = state.items.filter(
+        (item) =>
+          !(
+            item.locationId == locationId &&
+            item.menuCategoryId == menuCategoryId
+          )
+      );
+    },
   },
 });
 
 export const {
   setDisableLocationMenuCategories,
   addDisableLocationMenuCategories,
+  removeDisableLocationMenuCategory,
 } = disableLocationMenuCategorySlice.actions;
 export default disableLocationMenuCategorySlice.reducer;

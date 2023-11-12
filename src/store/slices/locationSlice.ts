@@ -65,7 +65,7 @@ export const deleteLocationThunk = createAsyncThunk(
   }
 );
 
-const locationSlice: any = createSlice({
+const locationSlice = createSlice({
   name: "locationSlice",
   initialState,
   reducers: {

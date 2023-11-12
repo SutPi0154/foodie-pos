@@ -29,21 +29,31 @@ const MenuCategoryDetail = () => {
   const [data, setData] = useState<UpdateMenuCategoryOptions>();
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const disableLocationMenuCategory = useAppSelector(
+    (store) => store.disableLocationMenuCategory.items
+  );
 
   useEffect(() => {
     if (menuCategory) {
+      const isDisable = disableLocationMenuCategory.find(
+        (item) =>
+          item?.locationId ===
+            Number(localStorage.getItem("selectedLocationId")) &&
+          item.menuCategoryId === menuCategoryId
+      );
       const locationId = Number(localStorage.getItem("selectedLocationId"));
       console.log(locationId);
       setData({
         id: menuCategory.id,
         name: menuCategory.name,
         companyId: menuCategory.companyId,
-        isAvailable: false,
+        isAvailable: isDisable ? false : true,
         locationId,
       });
     }
-  }, [menuCategory]);
-
+  }, [menuCategory, disableLocationMenuCategory, menuCategoryId]);
+  console.log(menuCategory, disableLocationMenuCategory);
+  console.log(menuCategoryId);
   if (!menuCategory || !data)
     return (
       <Box
@@ -123,7 +133,7 @@ const MenuCategoryDetail = () => {
       <FormControlLabel
         control={
           <Switch
-            defaultChecked
+            defaultChecked={data.isAvailable}
             onChange={(e, value) => {
               setData({ ...data, isAvailable: value });
             }}

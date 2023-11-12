@@ -8,6 +8,14 @@ import { useState } from "react";
 const TablesPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const tables = useAppSelector((store) => store.table.items);
+  const handleQrCodeImagePrint = (assetUrl: string) => {
+    const imageWindow = window.open("");
+    imageWindow?.document.write(
+      `<html><head><title>Print Image</title></head><body style="text-align: center;"><img src="${assetUrl}" onload="window.print();window.close()" /></body></html>`
+    );
+    imageWindow?.document.close();
+  };
+
   if (!tables) return;
   return (
     <Box>
@@ -23,12 +31,30 @@ const TablesPage = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", mt: 4, gap: 4 }}>
         {tables.map((item) => (
-          <ItemCard
-            icon={<TableBarIcon />}
-            title={item.name}
-            href={`/back-office/tables/${item.id}`}
+          <Box
             key={item.id}
-          />
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <ItemCard
+              icon={<TableBarIcon />}
+              title={item.name}
+              href={`/back-office/tables/${item.id}`}
+            />
+            <Button
+              onClick={() => {
+                handleQrCodeImagePrint(item.assetUrl);
+              }}
+              sx={{}}
+              variant="contained"
+            >
+              Print OR
+            </Button>
+          </Box>
         ))}
       </Box>
       <NewTable open={open} setOpen={setOpen} />
