@@ -20,6 +20,7 @@ model Company {
   updatedAt  DateTime   @updatedAt
 
   menuCateogries MenuCategory[]
+  User           User[]
 }
 
 model Location {
@@ -28,8 +29,8 @@ model Location {
   address                      String
   company                      Company                        @relation(fields: [companyId], references: [id])
   companyId                    Int
-  disabledLocationMenuCategory disabledLocationMenuCategory[]
-  disabledLoactionMenu         DisabledLoactionMenu[]
+  disabledLocationMenuCategory DisabledLocationMenuCategory[]
+  disabledLoactionMenu         DisabledLocationMenu[]
   table                        Table[]
   isArchived                   Boolean                        @default(false)
   createdAt                    DateTime                       @default(now())
@@ -41,14 +42,14 @@ model MenuCategory {
   name                         String
   company                      Company                        @relation(fields: [companyId], references: [id])
   companyId                    Int
-  disabledLocationMenuCategory disabledLocationMenuCategory[]
+  disabledLocationMenuCategory DisabledLocationMenuCategory[]
   menuCategoryMenu             MenuCategoryMenu[]
   isArchived                   Boolean                        @default(false)
   createdAt                    DateTime                       @default(now())
   updatedAt                    DateTime                       @updatedAt
 }
 
-model disabledLocationMenuCategory {
+model DisabledLocationMenuCategory  {
   id             Int          @id @default(autoincrement())
   loaction       Location     @relation(fields: [locationId], references: [id])
   locationId     Int
@@ -65,7 +66,7 @@ model Menu {
   price                Int                    @default(0)
   description          String?
   assetUrl             String?
-  disabledLoactionMenu DisabledLoactionMenu[]
+  disabledLoactionMenu DisabledLocationMenu[]
   menuCategoryMenu     MenuCategoryMenu[]
   menuAddonCategory    MenuAddonCategory[]
   orderLine            OrderLine[]
@@ -74,7 +75,7 @@ model Menu {
   updatedAt            DateTime               @updatedAt
 }
 
-model DisabledLoactionMenu {
+model DisabledLocationMenu {
   id         Int      @id @default(autoincrement())
   loaction   Location @relation(fields: [locationId], references: [id])
   locationId Int
@@ -162,10 +163,19 @@ model Table {
   name       String
   loaction   Location @relation(fields: [locationId], references: [id])
   locationId Int
+  assetUrl   String
   isArchived Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  orders      Order[]
+  orders     Order[]
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  name      String?
+  companyId Int
+  comapny   Company @relation(fields: [companyId], references: [id])
 }
 
 enum ORDERSTATUS {

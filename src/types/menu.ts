@@ -1,13 +1,31 @@
+import { Menu } from "@prisma/client";
+import { BaseOptions } from "./app";
+
 export interface MenuSlice {
-  items: [];
+  items: Menu[];
   isLoading: boolean;
-  error: Error | null;
+  isError: Error | null;
 }
 
-export interface BaseOptions {
-  onSuccess?: (data?: any) => void;
-  onError?: (data?: any) => void;
-}
 export interface GetMenusOptions extends BaseOptions {
   locationId: string;
+}
+
+export interface CreateNewMenuOption extends BaseOptions {
+  name: string;
+  price: number;
+  assetUrl?: string;
+  menuCategoryIds: number[];
+}
+
+export interface UpdateMenuOption extends BaseOptions {
+  id: number;
+  name: string;
+  price: number;
+  isAvailable: boolean;
+  locationId: number;
+  menuCategoryIds: number[];
+}
+export interface DeleteMenuOption extends BaseOptions {
+  id: number;
 }
