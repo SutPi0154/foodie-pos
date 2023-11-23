@@ -127,7 +127,7 @@ export const sideBarItems: SidebarItemsType[] = [
   },
   {
     id: 8,
-    label: "Setting",
+    label: "Settings",
     icon: <SettingsIcon />,
     route: "/back-office/settings",
   },

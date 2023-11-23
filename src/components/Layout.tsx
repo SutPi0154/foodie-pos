@@ -9,7 +9,8 @@ interface Props {
 }
 const Layout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const router = useRouter();
-  const isOrderApp = router.pathname === "/order";
+  const { companyId, tableId } = router.query;
+  const isOrderApp = companyId && tableId;
   const isBackOfficeApp = router.pathname.includes("/back-office");
   if (isOrderApp) {
     return (

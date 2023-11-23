@@ -17,12 +17,10 @@ const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const { init } = useAppSelector((store) => store.app);
 
   useEffect(() => {
-    if (session && !init) {
+    if (session) {
       dispatch(fetchAppData({}));
-      console.log(session);
-      console.log(init);
     }
-  }, [session, init, dispatch]);
+  }, [session, dispatch]);
 
   return (
     <Box>

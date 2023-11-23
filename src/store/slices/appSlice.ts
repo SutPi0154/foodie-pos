@@ -10,6 +10,7 @@ import { setMenuAddonCategory } from "./menuAddonCategorySlice";
 import { setMenuCategoryMenus } from "./menuCategoryMenuSlice";
 import { setMenuCategories } from "./menuCategorySlice";
 import { setMenus } from "./menuSlices";
+import { toggleSnackbar } from "./snackbarSlice";
 import { setTables } from "./tableSlice";
 
 const initialState: AppSlice = {
@@ -20,52 +21,45 @@ const initialState: AppSlice = {
 export const fetchAppData = createAsyncThunk(
   "app/appSlice",
   async (options: GetAppDataOptions, thunkApi) => {
-    const { onSuccess, onError } = options;
+    const { onSuccess, onError, companyId, tableId } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/app`);
+      const appDataUrl =
+        companyId && tableId
+          ? `${config.apiBaseUrl}/app?companyId=${companyId}&tableId=${tableId}`
+          : `${config.apiBaseUrl}/app`;
+      const response = await fetch(appDataUrl);
       const appData = await response.json();
-
       const {
-        location,
-        menuCategory,
-        menu,
-        menuCategoryMenu,
-        menuAddonCategory,
-        addonCategory,
-        addon,
-        disableLocationMenu,
-        disableLocationMenuCategory,
-        table,
+        locations,
+        menuCategories,
+        menus,
+        menuCategoryMenus,
+        addonCategories,
+        menuAddonCategories,
+        addons,
+        tables,
+        disabledLocationMenus,
+        disabledLocationMenuCategories,
       } = appData;
 
-      console.log(
-        location,
-        menuCategory,
-        menu,
-        menuCategoryMenu,
-        menuAddonCategory,
-        addonCategory,
-        addon,
-        table
-      );
       thunkApi.dispatch(setInit(true));
-      thunkApi.dispatch(setLocations(location));
+      thunkApi.dispatch(setLocations(locations));
       if (!localStorage.getItem("selectedLocationId")) {
-        localStorage.setItem("selectedLocationId", location[0].id);
+        localStorage.setItem("selectedLocationId", locations[0].id);
       }
-      thunkApi.dispatch(setMenuCategories(menuCategory));
-      thunkApi.dispatch(setMenus(menu));
-      thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenu));
-      thunkApi.dispatch(setAddons(addon));
-      thunkApi.dispatch(setAddonCategories(addonCategory));
-      thunkApi.dispatch(setTables(table));
-      thunkApi.dispatch(setDisableLocationMenus(disableLocationMenu));
+      thunkApi.dispatch(setMenuCategories(menuCategories));
+      thunkApi.dispatch(setMenus(menus));
+      thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenus));
+      thunkApi.dispatch(setAddons(addons));
+      thunkApi.dispatch(setAddonCategories(addonCategories));
+      thunkApi.dispatch(setTables(tables));
+      thunkApi.dispatch(setDisableLocationMenus(disabledLocationMenus));
       thunkApi.dispatch(
-        setDisableLocationMenuCategories(disableLocationMenuCategory)
+        setDisableLocationMenuCategories(disabledLocationMenuCategories)
       );
-      thunkApi.dispatch(setMenuAddonCategory(menuAddonCategory));
+      thunkApi.dispatch(setMenuAddonCategory(menuAddonCategories));
 
-      onSuccess && onSuccess();
+      onSuccess && onSuccess(() => thunkApi.dispatch(toggleSnackbar("app ")));
     } catch (err) {
       onError && onError();
     }

@@ -42,7 +42,6 @@ const MenuCategoryDetail = () => {
           item.menuCategoryId === menuCategoryId
       );
       const locationId = Number(localStorage.getItem("selectedLocationId"));
-      console.log(locationId);
       setData({
         id: menuCategory.id,
         name: menuCategory.name,
@@ -52,8 +51,7 @@ const MenuCategoryDetail = () => {
       });
     }
   }, [menuCategory, disableLocationMenuCategory, menuCategoryId]);
-  console.log(menuCategory, disableLocationMenuCategory);
-  console.log(menuCategoryId);
+
   if (!menuCategory || !data)
     return (
       <Box
@@ -69,7 +67,6 @@ const MenuCategoryDetail = () => {
     );
 
   const handleUpdateMenuCategory = () => {
-    console.log(data);
     dispatch(
       updateMenuCategoryThunk({
         ...data,

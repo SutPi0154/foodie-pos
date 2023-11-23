@@ -86,7 +86,6 @@ const MenuDetail = () => {
   };
 
   const handleUpdateMenu = () => {
-    console.log(data);
     dispatch(
       updateMenuThunk({
         ...data,

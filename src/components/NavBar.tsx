@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import { useState } from "react";
 
 const pages = ["Products", "Pricing", "Blog"];
@@ -46,39 +47,22 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
     >
       <Toolbar
         sx={{
-          w: "screen",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           mx: 10,
+          my: 1,
         }}
       >
-        <Typography
-          variant="h6"
-          noWrap
-          component="a"
-          href="#app-bar-with-responsive-menu"
-          sx={{
-            mr: 2,
-            display: { xs: "none", md: "flex" },
-            fontFamily: "monospace",
-            fontWeight: 700,
-            letterSpacing: ".3rem",
-            color: "inherit",
-            textDecoration: "none",
-          }}
-        >
-          LOGO
-        </Typography>
-        <Typography
-          variant="h5"
-          color={"secondary"}
-          sx={{
-            textDecoration: "none",
-          }}
-        >
-          Foodie POS
-        </Typography>
+        <Image
+          src={"/logo.png"}
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "10%", height: "auto" }}
+          alt="logo"
+        ></Image>
+
         <Box
           sx={{
             display: "flex",
@@ -90,9 +74,9 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {session ? (
-                  <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJIyiiNbz3VC9Afr-LqWpcw7loxjPnacfZSA&usqp=CAU" />
+                  <Avatar src={"/avatar.png"} />
                 ) : (
-                  <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJIyiiNbz3VC9Afr-LqWpcw7loxjPnacfZSA&usqp=CAU" />
+                  <Avatar src={"/avatar.png"} />
                 )}
               </IconButton>
             </Tooltip>

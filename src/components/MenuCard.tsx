@@ -6,7 +6,7 @@ import PaidIcon from "@mui/icons-material/Paid";
 interface Props {
   menu: Menu;
   href: string | object;
-  isAvailable: boolean;
+  isAvailable?: boolean;
 }
 
 const MenuCard = ({ menu, href, isAvailable }: Props) => {
@@ -23,8 +23,13 @@ const MenuCard = ({ menu, href, isAvailable }: Props) => {
     >
       <Card sx={{ width: 350, pb: 2 }}>
         <CardMedia
-          sx={{ height: 250, objectFit: "contain" }}
-          image={menu.assetUrl || ""}
+          sx={{
+            height: 250,
+            width: "auto",
+            backgroundSize: "contain",
+            borderRadius: 3,
+          }}
+          image={menu.assetUrl || "/default-menu.png"}
           component={"div"}
         ></CardMedia>
         <CardContent>

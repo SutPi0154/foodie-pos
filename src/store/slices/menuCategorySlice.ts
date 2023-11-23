@@ -8,8 +8,8 @@ import { config } from "@/utils/config";
 import { MenuCategory } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-  addDisableLocationMenuCategories,
   removeDisableLocationMenuCategory,
+  setDisableLocationMenuCategories,
 } from "./disableLocationMenuCategorySlice";
 import {
   removeMenuCategoryMenu,
@@ -54,10 +54,9 @@ export const updateMenuCategoryThunk = createAsyncThunk(
       });
       const { menuCategory, menuCategoryMenu, disabledLocationMenuCategory } =
         await response.json();
-      console.log("disableLocationMenuCategory", disabledLocationMenuCategory);
       if (!menuCategoryMenu && isAvailable === false) {
         thunkApi.dispatch(
-          addDisableLocationMenuCategories(disabledLocationMenuCategory)
+          setDisableLocationMenuCategories(disabledLocationMenuCategory)
         );
         thunkApi.dispatch(replaceMenuCategory(menuCategory));
       } else if (!menuCategoryMenu && isAvailable === true) {
@@ -81,7 +80,7 @@ export const updateMenuCategoryThunk = createAsyncThunk(
         thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenu));
         thunkApi.dispatch(replaceMenuCategory(menuCategory));
         thunkApi.dispatch(
-          addDisableLocationMenuCategories(disabledLocationMenuCategory)
+          setDisableLocationMenuCategories(disabledLocationMenuCategory)
         );
       }
 

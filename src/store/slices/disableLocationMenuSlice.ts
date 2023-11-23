@@ -12,14 +12,11 @@ const disableLocationMenuSlice = createSlice({
   name: "disableLocationMenuSlice",
   initialState,
   reducers: {
-    setDisableLocationMenus: (state, { payload }) => {
-      state.items = payload;
-    },
-    addDisableLocationMenus: (
+    setDisableLocationMenus: (
       state,
       { payload }: PayloadAction<DisabledLocationMenu[]>
     ) => {
-      state.items = [...state.items, ...payload];
+      state.items = payload;
     },
 
     removeDisableLocationMenus: (
@@ -34,9 +31,6 @@ const disableLocationMenuSlice = createSlice({
   },
 });
 
-export const {
-  setDisableLocationMenus,
-  addDisableLocationMenus,
-  removeDisableLocationMenus,
-} = disableLocationMenuSlice.actions;
+export const { setDisableLocationMenus, removeDisableLocationMenus } =
+  disableLocationMenuSlice.actions;
 export default disableLocationMenuSlice.reducer;
