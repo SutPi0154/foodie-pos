@@ -6,7 +6,7 @@ import {
   UpdateMenuOption,
 } from "@/types/menu";
 import { config } from "@/utils/config";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import {
   removeDisableLocationMenus,
@@ -137,9 +137,12 @@ const menuSlice = createSlice({
     removeMenus: (state, { payload }) => {
       state.items = state.items.filter((item) => item.id !== payload.id);
     },
+    setLoading: (state, { payload }: PayloadAction<boolean>) => {
+      state.isLoading = payload;
+    },
   },
 });
 
-export const { setMenus, replaceMenu, removeMenus, addMenu } =
+export const { setMenus, replaceMenu, removeMenus, addMenu, setLoading } =
   menuSlice.actions;
 export default menuSlice.reducer;

@@ -10,13 +10,17 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const method = req.method;
-  const { companyId, tableId } = req.query;
-  const isOrderApp = companyId && tableId;
+  const { tableId } = req.query;
+  const isOrderApp = tableId;
   if (method === "GET") {
     if (isOrderApp) {
-      const tables = await prisma.table.findFirst({
+      const table = await prisma.table.findFirst({
         where: { id: Number(tableId) },
       });
+      const location = await prisma.location.findFirst({
+        where: { id: table?.locationId },
+      });
+      const companyId = location?.companyId;
 
       let menuCategories = await prisma.menuCategory.findMany({
         where: { companyId: Number(companyId), isArchived: false },
@@ -28,6 +32,7 @@ export default async function handler(
           where: {
             menuCategoryId: { in: menuCategoryIds },
             isArchived: false,
+            locationId: location?.id,
           },
         })
       ).map((item) => item.menuCategoryId);
@@ -40,7 +45,7 @@ export default async function handler(
       const menuIds = menuCategoryMenus.map((item) => item.menuId);
       const disabledMenuIds = (
         await prisma.disabledLocationMenu.findMany({
-          where: { menuId: { in: menuIds } },
+          where: { menuId: { in: menuIds }, locationId: location?.id },
         })
       ).map((item) => item.menuId);
       const menus = (
@@ -163,8 +168,8 @@ export default async function handler(
         const table = await prisma.table.create({
           data: { name: newTableName, locationId: location.id, assetUrl: "" },
         });
-        await qrCodeImageUpload(company.id, table.id);
-        const assetUrl = getQrCodeUrl(company.id, table.id);
+        await qrCodeImageUpload(table.id);
+        const assetUrl = getQrCodeUrl(table.id);
         await prisma.table.update({
           data: { assetUrl },
           where: { id: table.id },

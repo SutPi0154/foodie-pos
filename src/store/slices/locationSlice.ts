@@ -10,6 +10,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState: LocationSlice = {
   items: [],
+  selectedLocation: null,
   isLoading: false,
   isError: null,
 };
@@ -69,12 +70,20 @@ const locationSlice = createSlice({
   name: "locationSlice",
   initialState,
   reducers: {
-    setLocations: (state, { payload }) => {
+    setLocations: (state, { payload }: PayloadAction<Location[]>) => {
       state.items = payload;
       const selectedLocationId = localStorage.getItem("selectedLocationId");
       if (!selectedLocationId) {
         const firstLocationId = payload[0].id;
         localStorage.setItem("selectedLocationId", String(firstLocationId));
+        state.selectedLocation = payload[0];
+      } else {
+        const selectedLocation = state.items.find(
+          (item) => item.id === Number(selectedLocationId)
+        );
+        if (selectedLocation) {
+          state.selectedLocation = selectedLocation;
+        }
       }
     },
     addLocation: (state, { payload }) => {
@@ -85,12 +94,20 @@ const locationSlice = createSlice({
         item.id === payload.id ? payload : item
       );
     },
+    setSelectedLocation: (state, { payload }: PayloadAction<Location>) => {
+      state.selectedLocation = payload;
+    },
     removeLocation: (state, { payload }: PayloadAction<{ id: number }>) => {
       state.items = state.items.filter((item) => item.id !== payload.id);
     },
   },
 });
 
-export const { setLocations, addLocation, replaceLocation, removeLocation } =
-  locationSlice.actions;
+export const {
+  setLocations,
+  addLocation,
+  replaceLocation,
+  removeLocation,
+  setSelectedLocation,
+} = locationSlice.actions;
 export default locationSlice.reducer;

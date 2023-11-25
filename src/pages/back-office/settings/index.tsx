@@ -1,58 +1,5 @@
-// import { useAppSelector } from "@/store/hooks";
-// import {
-//   FormControl,
-//   InputLabel,
-//   MenuItem,
-//   Select,
-//   SelectChangeEvent,
-// } from "@mui/material";
-// import { Location } from "@prisma/client";
-// import { useEffect, useState } from "react";
-
-// const SettingsPage = () => {
-//   const [selectedLocationId, setSelectedLocationId] = useState("");
-//   const locations: Location[] = useAppSelector(
-//     (store: any) => store.location.items
-//   );
-
-//   const handleChangeLocation = (e: SelectChangeEvent<number>) => {
-//     const id = String(e.target.value);
-//     localStorage.setItem("selectedLocationId", id);
-//     setSelectedLocationId(id);
-//   };
-//   useEffect(() => {
-//     if (locations.length) {
-//       const id = localStorage.getItem("selectedLocationId");
-//       if (id) {
-//         setSelectedLocationId(id);
-//       }
-//     } else {
-//       const firstLocationId = String(locations[0].id);
-//       setSelectedLocationId(firstLocationId);
-//       localStorage.setItem("selectedLocationId", firstLocationId);
-//     }
-//   }, [locations]);
-//   if (!selectedLocationId) return null;
-//   return (
-//     <FormControl sx={{ width: 400 }}>
-//       <InputLabel>Location</InputLabel>
-//       <Select
-//         value={Number(selectedLocationId)}
-//         label="Location"
-//         onChange={handleChangeLocation}
-//       >
-//         {locations.map((item) => (
-//           <MenuItem key={item.id} value={item.id}>
-//             {item.name}
-//           </MenuItem>
-//         ))}
-//       </Select>
-//     </FormControl>
-//   );
-// };
-
-// export default SettingsPage;
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setSelectedLocation } from "@/store/slices/locationSlice";
 import {
   Box,
   FormControl,
@@ -66,19 +13,24 @@ import { useEffect, useState } from "react";
 const SettingsPage = () => {
   const locations = useAppSelector((state) => state.location.items);
   const [locationId, setLocationId] = useState<number>();
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (locations.length) {
       const selectedLocationId = localStorage.getItem("selectedLocationId");
       if (selectedLocationId) {
         setLocationId(Number(selectedLocationId));
+        const location = locations.find(
+          (item) => item.id === Number(selectedLocationId)
+        );
+        location && dispatch(setSelectedLocation(location));
       } else {
         const firstLocationId = locations[0].id;
         setLocationId(Number(firstLocationId));
         localStorage.setItem("selectedLocationId", String(firstLocationId));
+        dispatch(setSelectedLocation(locations[0]));
       }
     }
-  }, [locations]);
+  }, [locations, dispatch, locationId]);
 
   const handleLocationChange = (evt: SelectChangeEvent<number>) => {
     localStorage.setItem("selectedLocationId", String(evt.target.value));

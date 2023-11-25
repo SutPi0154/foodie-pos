@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/store/hooks";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import {
@@ -15,15 +16,14 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 
-const pages = ["Products", "Pricing", "Blog"];
-
 interface ThemeToggleProps {
   isDarkMode: boolean;
   setDarkMode: (darkMode: boolean) => void;
 }
 const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
+  const locations = useAppSelector((store) => store.location.items);
+  const { selectedLocation } = useAppSelector((store) => store.location);
   const { data: session } = useSession();
 
   const handleThemeToggle = () => {
@@ -62,7 +62,20 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
           style={{ width: "10%", height: "auto" }}
           alt="logo"
         ></Image>
-
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h5" color={"secondary"}>
+            Foodie Pos
+          </Typography>
+          <Typography color={"secondary"} sx={{ fontSize: 12 }}>
+            ( {selectedLocation?.name})
+          </Typography>
+        </Box>
         <Box
           sx={{
             display: "flex",

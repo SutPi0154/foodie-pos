@@ -20,10 +20,10 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
       sx={{
         width: "100vw",
         display: "flex",
+        zIndex: 20,
         flexDirection: "column",
         alignItems: "center",
         position: "fixed",
-        zIndex: 5,
         top: 0,
       }}
     >
@@ -32,6 +32,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
           sx={{
             position: "absolute",
             top: 10,
+            zIndex: 30,
             right: { xs: 40, md: 80, lg: 200 },
             cursor: "pointer",
           }}
@@ -64,7 +65,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
 
       <Image
         src="/order-app-header.svg"
-        width={0}
+        width={10}
         height={0}
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}

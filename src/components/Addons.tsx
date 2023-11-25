@@ -6,17 +6,18 @@ import {
   Radio,
   Typography,
 } from "@mui/material";
+import { Addon } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   addonCategoryId: number;
-  selectedAddonIds: number[];
-  setSelectedAddonIds: Dispatch<SetStateAction<number[]>>;
+  selectedAddons: Addon[];
+  setSelectedAddons: Dispatch<SetStateAction<Addon[]>>;
 }
 const Addons = ({
   addonCategoryId,
-  selectedAddonIds,
-  setSelectedAddonIds,
+  selectedAddons,
+  setSelectedAddons,
 }: Props) => {
   const addonCategory = useAppSelector(
     (store) => store.addonCategory.items
@@ -45,34 +46,34 @@ const Addons = ({
                   <Radio
                     color="success"
                     checked={
-                      selectedAddonIds.find((addonId) => addonId === addon.id)
+                      selectedAddons.find((item) => item.id === addon.id)
                         ? true
                         : false
                     }
                     onChange={(evt, value) => {
                       const addonIds = addons.map((item) => item.id);
-                      const others = selectedAddonIds.filter(
-                        (item) => !addonIds.includes(item)
+                      const others = selectedAddons.filter(
+                        (item) => !addonIds.includes(item.id)
                       );
-                      setSelectedAddonIds([...others, addon.id]);
+                      setSelectedAddons([...others, addon]);
                     }}
                   />
                 ) : (
                   <Checkbox
                     color="success"
                     checked={
-                      selectedAddonIds.find((AddonId) => AddonId === addon.id)
+                      selectedAddons.find((item) => item.id === addon.id)
                         ? true
                         : false
                     }
                     onChange={(evt, value) => {
                       if (value) {
-                        setSelectedAddonIds([...selectedAddonIds, addon.id]);
+                        setSelectedAddons([...selectedAddons, addon]);
                       } else {
-                        const selected = selectedAddonIds.filter(
-                          (selectedAddonId) => selectedAddonId !== addon.id
+                        const selected = selectedAddons.filter(
+                          (item) => item.id !== addon.id
                         );
-                        setSelectedAddonIds(selected);
+                        setSelectedAddons(selected);
                       }
                     }}
                   />

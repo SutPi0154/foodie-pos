@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 const OrderPage = () => {
   const { isReady, ...router } = useRouter();
   const query = router.query;
-  const companyId = query.companyId as string;
+  const tableId = query.tableId as string;
   const menuCategories = useAppSelector((store) => store.menuCategory.items);
   const menuCategoryMenu = useAppSelector(
     (store) => store.menuCategoryMenu.items
@@ -18,10 +18,11 @@ const OrderPage = () => {
   const [selectedMenuCategory, setSelectedMenuCategory] =
     useState<MenuCategory>();
   useEffect(() => {
-    if (isReady && !companyId) {
+    if (isReady && !tableId) {
       router.push("/");
+      console.log("back");
     }
-  }, [isReady, companyId, router]);
+  }, [isReady, tableId, router]);
 
   useEffect(() => {
     if (menuCategories.length) {
@@ -29,7 +30,7 @@ const OrderPage = () => {
     }
   }, [menuCategories]);
   const renderMenus = () => {
-    const isValid = companyId && selectedMenuCategory;
+    const isValid = tableId && selectedMenuCategory;
     if (!isValid) return null;
 
     const validMenuIds = menuCategoryMenu

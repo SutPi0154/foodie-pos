@@ -4,6 +4,7 @@ import { BaseOptions } from "./app";
 export interface LocationSlice {
   items: Location[];
   isLoading: boolean;
+  selectedLocation: Location | null;
   isError: Error | null;
 }
 

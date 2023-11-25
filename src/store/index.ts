@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import addonCategoryReducer from "./slices/addonCategorySlice";
 import addonReducer from "./slices/addonSlice";
 import appReducer from "./slices/appSlice";
-import cartReducer from "./slices/cardSlice";
+import cartReducer from "./slices/cartSlice";
 import disableLocationMenuCategoryReducer from "./slices/disableLocationMenuCategorySlice";
 import disableLocationMenuReducer from "./slices/disableLocationMenuSlice";
 import locationReducer from "./slices/locationSlice";
