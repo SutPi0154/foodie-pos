@@ -17,20 +17,27 @@ const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const { init } = useAppSelector((store) => store.app);
 
   useEffect(() => {
-    if (session && !init) {
+    if (session) {
       dispatch(fetchAppData({}));
-      console.log(session);
-      console.log(init);
     }
-  }, [session, init, dispatch]);
+  }, [session, dispatch]);
 
   return (
-    <Box>
+    <Box sx={{ height: "100%" }}>
       <NavBar isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
-      <Box sx={{ color: "" }}></Box>
-      <Box sx={{ display: "flex" }}>
-        {session && <SideBar />}
-        <Box sx={{ width: "100%", m: 4 }}> {children}</Box>
+      <Box sx={{ display: "flex", flexGrow: 1 }}>
+        {session && (
+          <Box
+            sx={{
+              display: { xs: "none", sm: "none", md: "block" },
+              bgcolor: "success.main",
+            }}
+          >
+            <SideBar />
+          </Box>
+        )}
+
+        <Box sx={{ width: "100%", m: { xs: 2, md: 4 } }}> {children}</Box>
       </Box>
     </Box>
   );

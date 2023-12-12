@@ -24,8 +24,8 @@ export default async function handler(
     });
     const companyId = dbUser.companyId;
     const tableId = table.id;
-    await qrCodeImageUpload(companyId, tableId);
-    const assetUrl = getQrCodeUrl(companyId, tableId);
+    await qrCodeImageUpload(tableId);
+    const assetUrl = getQrCodeUrl(tableId);
     await prisma.table.update({ data: { assetUrl }, where: { id: table.id } });
     return res.status(200).json({ table });
   } else if (method === "DELETE") {

@@ -11,21 +11,22 @@ export interface GetMenusOptions extends BaseOptions {
   locationId: string;
 }
 
-export interface CreateNewMenuOption extends BaseOptions {
+export interface CreateNewMenuOptions extends BaseOptions {
   name: string;
   price: number;
   assetUrl?: string;
   menuCategoryIds: number[];
 }
 
-export interface UpdateMenuOption extends BaseOptions {
+export interface UpdateMenuOptions extends BaseOptions {
   id: number;
   name: string;
   price: number;
-  isAvailable: boolean;
+  isAvailable?: boolean;
   locationId: number;
   menuCategoryIds: number[];
+  assetUrl?: string | null;
 }
-export interface DeleteMenuOption extends BaseOptions {
+export interface DeleteMenuOptions extends BaseOptions {
   id: number;
 }

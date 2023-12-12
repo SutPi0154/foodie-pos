@@ -16,29 +16,38 @@ export default async function handler(
     const dbUser = await prisma.user.findUnique({ where: { email } });
     if (!dbUser) return res.status(401).send("Unauthorized");
     const companyId = dbUser.companyId;
-    const { name, address } = req.body;
-    const isValid = name && address;
+    const { name, city, township, street } = req.body;
+    const isValid =
+      name.trim() !== "" &&
+      city.trim() !== "" &&
+      street.trim() !== "" &&
+      township.trim() !== "";
     if (!isValid)
       return res.status(400).send("userName and address is not found");
     const newLocation = await prisma.location.create({
-      data: { name, address, companyId },
+      data: { name, city, township, street, companyId },
     });
     return res.status(200).json(newLocation);
   } else if (method === "PUT") {
-    const { id, name, address, companyId } = req.body;
+    const { id, name, city, street, township, companyId } = req.body;
     const isValid =
-      id && name.trim() !== "" && address.trim() !== "" && companyId;
+      id &&
+      name.trim() !== "" &&
+      city.trim() !== "" &&
+      street.trim() !== "" &&
+      township.trim() !== "" &&
+      companyId;
     if (!isValid) return res.status(400).send("bad request");
     const isExist = await prisma.company.findFirst({
       where: { id: companyId },
     });
     if (!isExist) return res.status(400).send("bad request");
     const company = await prisma.company.update({
-      data: { address },
+      data: { street, city, township },
       where: { id: companyId },
     });
     const location = await prisma.location.update({
-      data: { name, address },
+      data: { name, city, township, street },
       where: { id },
     });
     return res.status(200).json({ location });

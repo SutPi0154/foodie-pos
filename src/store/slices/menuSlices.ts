@@ -1,16 +1,16 @@
 import {
-  CreateNewMenuOption,
-  DeleteMenuOption,
+  CreateNewMenuOptions,
+  DeleteMenuOptions,
   GetMenusOptions,
   MenuSlice,
-  UpdateMenuOption,
+  UpdateMenuOptions,
 } from "@/types/menu";
 import { config } from "@/utils/config";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import {
-  addDisableLocationMenus,
   removeDisableLocationMenus,
+  setDisableLocationMenus,
 } from "./disableLocationMenuSlice";
 import { removeMenuAddonCategory } from "./menuAddonCategorySlice";
 import {
@@ -41,7 +41,7 @@ export const getMenusThunk = createAsyncThunk(
 );
 export const createMenuThunk = createAsyncThunk(
   "menus/createMenu",
-  async (options: CreateNewMenuOption, thunkApi) => {
+  async (options: CreateNewMenuOptions, thunkApi) => {
     const { name, price, assetUrl, menuCategoryIds, onSuccess, onError } =
       options;
     try {
@@ -61,12 +61,13 @@ export const createMenuThunk = createAsyncThunk(
 );
 export const updateMenuThunk = createAsyncThunk(
   "menus/updateMenu",
-  async (options: UpdateMenuOption, thunkApi) => {
+  async (options: UpdateMenuOptions, thunkApi) => {
     const {
       id,
       name,
       menuCategoryIds,
       price,
+      assetUrl,
       locationId,
       isAvailable,
       onSuccess,
@@ -82,6 +83,7 @@ export const updateMenuThunk = createAsyncThunk(
           menuCategoryIds,
           price,
           isAvailable,
+          assetUrl,
           locationId,
         }),
       });
@@ -89,8 +91,8 @@ export const updateMenuThunk = createAsyncThunk(
         await response.json();
       thunkApi.dispatch(replaceMenu(menu));
       thunkApi.dispatch(replaceMenuCategoryMenu(menuCategoryMenus));
-      if (isAvailable === false) {
-        thunkApi.dispatch(addDisableLocationMenus(disabledLocationMenus));
+      if (isAvailable === false && disabledLocationMenus) {
+        thunkApi.dispatch(setDisableLocationMenus(disabledLocationMenus));
       } else {
         thunkApi.dispatch(
           removeDisableLocationMenus({ locationId, menuId: id })
@@ -104,7 +106,7 @@ export const updateMenuThunk = createAsyncThunk(
 );
 export const deleteMenuThunk = createAsyncThunk(
   "menus/deleteMenu",
-  async (options: DeleteMenuOption, thunkApi) => {
+  async (options: DeleteMenuOptions, thunkApi) => {
     const { id, onSuccess, onError } = options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu?id=${id}`, {
@@ -137,9 +139,12 @@ const menuSlice = createSlice({
     removeMenus: (state, { payload }) => {
       state.items = state.items.filter((item) => item.id !== payload.id);
     },
+    setLoading: (state, { payload }: PayloadAction<boolean>) => {
+      state.isLoading = payload;
+    },
   },
 });
 
-export const { setMenus, replaceMenu, removeMenus, addMenu } =
+export const { setMenus, replaceMenu, removeMenus, addMenu, setLoading } =
   menuSlice.actions;
 export default menuSlice.reducer;

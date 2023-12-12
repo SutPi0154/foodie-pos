@@ -9,25 +9,22 @@ interface Props {
 }
 const Layout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const router = useRouter();
-  const isOrderApp = router.pathname === "/order";
+  const { tableId } = router.query;
+  const isOrderApp = tableId;
   const isBackOfficeApp = router.pathname.includes("/back-office");
   if (isOrderApp) {
     return (
-      <Box>
-        <OrderLayout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
-          {children}
-        </OrderLayout>
-      </Box>
+      <OrderLayout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
+        {children}
+      </OrderLayout>
     );
   }
 
   if (isBackOfficeApp) {
     return (
-      <Box>
-        <BackOfficeLayout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
-          {children}
-        </BackOfficeLayout>
-      </Box>
+      <BackOfficeLayout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
+        {children}
+      </BackOfficeLayout>
     );
   }
   return <Box>{children}</Box>;

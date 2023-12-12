@@ -91,7 +91,7 @@ const AddonDetail = () => {
         flexDirection: "column",
         alignItems: "center",
         gap: 2,
-        width: 600,
+        width: { xs: "100%", lg: 600 },
       }}
     >
       <Box
@@ -104,7 +104,7 @@ const AddonDetail = () => {
         <Button
           variant="outlined"
           color="error"
-          sx={{ width: "fit-content" }}
+          sx={{ width: "fit-content", mr: { xs: 2 } }}
           onClick={() => {
             setOpen(true);
           }}
@@ -114,7 +114,7 @@ const AddonDetail = () => {
       </Box>
       <TextField
         label="name"
-        sx={{ width: 400 }}
+        sx={{ width: { xs: "90%", lg: 400 } }}
         defaultValue={data.name}
         onChange={(e) => {
           setData({ ...data, id: addon.id, name: e.target.value });
@@ -122,7 +122,7 @@ const AddonDetail = () => {
       />
       <TextField
         label="price"
-        sx={{ width: 400 }}
+        sx={{ width: { xs: "90%", lg: 400 } }}
         defaultValue={data.price}
         onChange={(e) => {
           setData({ ...data, id: addon.id, price: Number(e.target.value) });
@@ -132,10 +132,10 @@ const AddonDetail = () => {
       <FormControl>
         <InputLabel>Addon Category</InputLabel>
         <Select
+          sx={{ width: { xs: "90%", lg: 400 } }}
           onChange={handleChange}
           label="Addon Category"
           value={data.addonCategoryId}
-          sx={{ width: 400 }}
           renderValue={(selectedAddonCategoryId) => {
             return (
               addonCategories.find(
@@ -153,11 +153,15 @@ const AddonDetail = () => {
         </Select>
       </FormControl>
       <Box
-        sx={{ width: 400, display: "flex", justifyContent: "center", gap: 2 }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+          width: { xs: "100%", lg: 400 },
+        }}
       >
         <Button
           variant="contained"
-          sx={{}}
           color="info"
           onClick={() => {
             router.push("/back-office/addons");

@@ -96,7 +96,7 @@ const AddonCategoryDetail = () => {
         flexDirection: "column",
         alignItems: "center",
         gap: 2,
-        width: 600,
+        width: { xs: "100%", lg: 600 },
       }}
     >
       <Box
@@ -118,21 +118,21 @@ const AddonCategoryDetail = () => {
         </Button>
       </Box>
       <TextField
-        sx={{ width: 400 }}
+        sx={{ width: { xs: "90%", lg: 400 } }}
         label="addon category"
         defaultValue={addonCategory.name}
         onChange={(e) => {
           setData({ ...data, name: e.target.value });
         }}
       />
-      <FormControl>
+      <FormControl sx={{ width: { xs: "90%", lg: 400 } }}>
         <InputLabel>menus</InputLabel>
         <Select
           multiple
           onChange={handleChange}
           label="menus"
           value={data.menuIds}
-          sx={{ width: 400 }}
+          sx={{ width: { xs: "100%", lg: 400 } }}
           renderValue={(selectedMenuIds) => {
             return selectedMenuIds
               .map((selectedMenuId) => {
@@ -161,7 +161,7 @@ const AddonCategoryDetail = () => {
       />
       <Box
         sx={{
-          width: 400,
+          width: { xs: "100%", lg: 400 },
           display: "flex",
           justifyContent: "center",
           gap: 2,
@@ -170,7 +170,6 @@ const AddonCategoryDetail = () => {
       >
         <Button
           variant="contained"
-          sx={{}}
           color="info"
           onClick={() => {
             router.push("/back-office/addon-categories");

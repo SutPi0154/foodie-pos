@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@/store/hooks";
+import { setCloseDrawer } from "@/store/slices/openDrawerSlice";
 import CategoryIcon from "@mui/icons-material/Category";
 import ClassIcon from "@mui/icons-material/Class";
 import EggIcon from "@mui/icons-material/Egg";
@@ -18,12 +20,14 @@ import {
 import Link from "next/link";
 
 const SideBar = () => {
+  const dispatch = useAppDispatch();
   return (
     <Box
       sx={{
-        width: 350,
+        width: { lg: 350 },
         bgcolor: "success.main",
-        height: "100vh",
+        minHeight: "100vh",
+
         borderTopRightRadius: 20,
       }}
     >
@@ -33,6 +37,9 @@ const SideBar = () => {
             key={item.id}
             style={{ textDecoration: "none" }}
             href={item.route}
+            onClick={() => {
+              dispatch(setCloseDrawer());
+            }}
           >
             <ListItem disablePadding>
               <ListItemButton>
@@ -53,6 +60,9 @@ const SideBar = () => {
         {sideBarItems.slice(-1).map((item) => (
           <Link
             key={item.id}
+            onClick={() => {
+              dispatch(setCloseDrawer());
+            }}
             href={item.route}
             style={{ textDecoration: "none" }}
           >
@@ -127,7 +137,7 @@ export const sideBarItems: SidebarItemsType[] = [
   },
   {
     id: 8,
-    label: "Setting",
+    label: "Settings",
     icon: <SettingsIcon />,
     route: "/back-office/settings",
   },

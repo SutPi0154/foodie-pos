@@ -1,8 +1,11 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { createMenuThunk } from "@/store/slices/menuSlices";
+import { createMenuThunk, setLoading } from "@/store/slices/menuSlices";
 import { toggleSnackbar } from "@/store/slices/snackbarSlice";
-import { CreateNewMenuOption } from "@/types/menu";
+import { CreateNewMenuOptions } from "@/types/menu";
 import { config } from "@/utils/config";
+import SaveIcon from "@mui/icons-material/Save";
+import LoadingButton from "@mui/lab/LoadingButton";
+
 import {
   Box,
   Button,
@@ -26,12 +29,14 @@ interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
-const defaultNewMenu: CreateNewMenuOption = {
+const defaultNewMenu: CreateNewMenuOptions = {
   name: "",
+  assetUrl: undefined,
   price: 0,
   menuCategoryIds: [],
 };
 const NewMenu = ({ open, setOpen }: Props) => {
+  const { isLoading } = useAppSelector((item) => item.menu);
   const menuCategories = useAppSelector((state) => state.menuCategory.items);
 
   const [newMenu, setNewMenu] = useState(defaultNewMenu);
@@ -43,6 +48,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
 
   const handleCreateMenu = async () => {
+    dispatch(setLoading(true));
     const newMenuPayload = { ...newMenu };
     if (menuImage) {
       const formData = new FormData();
@@ -51,8 +57,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
         method: "POST",
         body: formData,
       });
-      const responseJson = await response.json();
-      const assetUrl = responseJson.assetUrl;
+      const { assetUrl } = await response.json();
       newMenuPayload.assetUrl = assetUrl;
     }
     dispatch(
@@ -60,7 +65,12 @@ const NewMenu = ({ open, setOpen }: Props) => {
         ...newMenuPayload,
         onSuccess: () => {
           setOpen(false);
+          setNewMenu(defaultNewMenu);
           dispatch(toggleSnackbar({ message: "Created menu successfully" }));
+          dispatch(setLoading(false));
+        },
+        onError: () => {
+          dispatch(setLoading(false));
         },
       })
     );
@@ -101,7 +111,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
             value={newMenu.menuCategoryIds}
             label="Menu Category"
             onChange={handleChange}
-            sx={{ width: 400 }}
+            // sx={{ width: 400 }}
             renderValue={(selectMenuCategoryIds) => {
               return selectMenuCategoryIds
                 .map((selectMenuCategoryId) => {
@@ -153,12 +163,12 @@ const NewMenu = ({ open, setOpen }: Props) => {
             color="info"
             onClick={() => {
               setOpen(false);
+              setNewMenu(defaultNewMenu);
             }}
-            sx={{}}
           >
             cancel
           </Button>
-          <Button
+          <LoadingButton
             disabled={
               !newMenu ||
               !newMenu.menuCategoryIds.length ||
@@ -166,9 +176,12 @@ const NewMenu = ({ open, setOpen }: Props) => {
             }
             variant="contained"
             onClick={handleCreateMenu}
+            loading={isLoading}
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
           >
-            confirm
-          </Button>
+            {isLoading === true ? "loading" : "confirm"}
+          </LoadingButton>
         </Box>
       </DialogContent>
     </Dialog>

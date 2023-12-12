@@ -1,10 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { deleteMenuThunk, updateMenuThunk } from "@/store/slices/menuSlices";
 import { toggleSnackbar } from "@/store/slices/snackbarSlice";
-import { UpdateMenuOption } from "@/types/menu";
+import { UpdateMenuOptions } from "@/types/menu";
+import { config } from "@/utils/config";
 import {
   Box,
   Button,
+  CardMedia,
   Checkbox,
   CircularProgress,
   Dialog,
@@ -22,7 +24,7 @@ import {
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 const MenuDetail = () => {
   const router = useRouter();
@@ -32,7 +34,7 @@ const MenuDetail = () => {
     (store) => store.menuCategoryMenu.items
   );
   const menuCategories = useAppSelector((store) => store.menuCategory.items);
-  const [data, setData] = useState<UpdateMenuOption>();
+  const [data, setData] = useState<UpdateMenuOptions>();
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -86,7 +88,6 @@ const MenuDetail = () => {
   };
 
   const handleUpdateMenu = () => {
-    console.log(data);
     dispatch(
       updateMenuThunk({
         ...data,
@@ -95,6 +96,29 @@ const MenuDetail = () => {
         },
       })
     );
+  };
+  const handleMenuImageUpdate = async (evt: ChangeEvent<HTMLInputElement>) => {
+    const files = evt.target.files;
+    if (files) {
+      const file = files[0];
+      const formData = new FormData();
+
+      formData.append("files", file as Blob);
+      const response = await fetch(`${config.apiBaseUrl}/asset`, {
+        method: "POST",
+        body: formData,
+      });
+      const { assetUrl } = await response.json();
+      dispatch(
+        updateMenuThunk({
+          ...data,
+          assetUrl,
+          onSuccess: () => {
+            dispatch(toggleSnackbar({ message: "Updated menu successfully" }));
+          },
+        })
+      );
+    }
   };
   const handleDeleteMenu = () => {
     dispatch(
@@ -112,9 +136,10 @@ const MenuDetail = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         gap: 2,
-        width: 600,
+        alignItems: "center",
+        width: { xs: "100%" },
+        mb: 4,
       }}
     >
       <Box
@@ -127,7 +152,7 @@ const MenuDetail = () => {
         <Button
           variant="outlined"
           color="error"
-          sx={{ width: "fit-content" }}
+          sx={{ width: "fit-content", mr: { xs: 2 } }}
           onClick={() => {
             setOpen(true);
           }}
@@ -135,31 +160,60 @@ const MenuDetail = () => {
           delete
         </Button>
       </Box>
+
+      <Box
+        sx={{
+          alignSelf: "center",
+          display: "flex",
+          flexDirection: "column",
+          justifyItems: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ width: "100%" }}>
+          <CardMedia
+            component="img"
+            image={menu.assetUrl || "/default-menu.png"}
+            sx={{
+              objectFit: "contain",
+              height: { xs: 200, md: 300 },
+              borderRadius: 4,
+            }}
+          />
+        </Box>
+        <Button
+          sx={{ width: "fit-content", mt: 2, mb: 2 }}
+          variant="contained"
+          component="label"
+        >
+          Upload file
+          <input type="file" hidden onChange={handleMenuImageUpdate} />
+        </Button>
+      </Box>
       <TextField
         label="name"
-        sx={{ width: 400 }}
         defaultValue={menu.name}
+        sx={{ width: { xs: "90%" } }}
         onChange={(e) => {
           setData({ ...data, name: e.target.value });
         }}
       />
       <TextField
         label="price"
-        sx={{ width: 400 }}
         defaultValue={menu.price}
+        sx={{ width: { xs: "90%" } }}
         onChange={(e) => {
           setData({ ...data, price: Number(e.target.value) });
         }}
         type="number"
       />
-      <FormControl>
+      <FormControl sx={{ width: { xs: "90%" } }}>
         <InputLabel>Menu Category</InputLabel>
         <Select
           multiple
           onChange={handleChange}
           label="menuCategory"
           value={data.menuCategoryIds}
-          sx={{ width: 400 }}
           renderValue={(selectedIds) => {
             return selectedIds
               .map((selectedId) => {
@@ -192,9 +246,7 @@ const MenuDetail = () => {
         }
         label="is available"
       />
-      <Box
-        sx={{ width: 400, display: "flex", justifyContent: "center", gap: 2 }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
         <Button
           variant="contained"
           sx={{}}

@@ -153,7 +153,6 @@ const NewAddonCategory = ({ open, setOpen }: Props) => {
                 setOpen(false);
                 setNewAddonCategory(defaultNewAddonCategory);
               }}
-              sx={{}}
             >
               cancel
             </Button>

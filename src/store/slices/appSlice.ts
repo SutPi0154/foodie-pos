@@ -3,6 +3,7 @@ import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setAddonCategories } from "./addonCategorySlice";
 import { setAddons } from "./addonSlice";
+import { setCompany } from "./companySlice";
 import { setDisableLocationMenuCategories } from "./disableLocationMenuCategorySlice";
 import { setDisableLocationMenus } from "./disableLocationMenuSlice";
 import { setLocations } from "./locationSlice";
@@ -10,7 +11,9 @@ import { setMenuAddonCategory } from "./menuAddonCategorySlice";
 import { setMenuCategoryMenus } from "./menuCategoryMenuSlice";
 import { setMenuCategories } from "./menuCategorySlice";
 import { setMenus } from "./menuSlices";
+import { setOrders } from "./orderSlice";
 import { setTables } from "./tableSlice";
+import { setUser } from "./userSlice";
 
 const initialState: AppSlice = {
   init: false,
@@ -20,51 +23,48 @@ const initialState: AppSlice = {
 export const fetchAppData = createAsyncThunk(
   "app/appSlice",
   async (options: GetAppDataOptions, thunkApi) => {
-    const { onSuccess, onError } = options;
+    const { onSuccess, onError, tableId } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/app`);
+      const appDataUrl = tableId
+        ? `${config.apiBaseUrl}/app?tableId=${tableId}`
+        : `${config.apiBaseUrl}/app`;
+      const response = await fetch(appDataUrl);
       const appData = await response.json();
-
       const {
-        location,
-        menuCategory,
-        menu,
-        menuCategoryMenu,
-        menuAddonCategory,
-        addonCategory,
-        addon,
-        disableLocationMenu,
-        disableLocationMenuCategory,
-        table,
+        locations,
+        menuCategories,
+        menus,
+        menuCategoryMenus,
+        addonCategories,
+        menuAddonCategories,
+        addons,
+        tables,
+        orders,
+        disabledLocationMenus,
+        disabledLocationMenuCategories,
+        company,
+        user,
       } = appData;
 
-      console.log(
-        location,
-        menuCategory,
-        menu,
-        menuCategoryMenu,
-        menuAddonCategory,
-        addonCategory,
-        addon,
-        table
-      );
       thunkApi.dispatch(setInit(true));
-      thunkApi.dispatch(setLocations(location));
+      thunkApi.dispatch(setLocations(locations));
       if (!localStorage.getItem("selectedLocationId")) {
-        localStorage.setItem("selectedLocationId", location[0].id);
+        localStorage.setItem("selectedLocationId", locations[0].id);
       }
-      thunkApi.dispatch(setMenuCategories(menuCategory));
-      thunkApi.dispatch(setMenus(menu));
-      thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenu));
-      thunkApi.dispatch(setAddons(addon));
-      thunkApi.dispatch(setAddonCategories(addonCategory));
-      thunkApi.dispatch(setTables(table));
-      thunkApi.dispatch(setDisableLocationMenus(disableLocationMenu));
+      thunkApi.dispatch(setMenuCategories(menuCategories));
+      thunkApi.dispatch(setMenus(menus));
+      thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenus));
+      thunkApi.dispatch(setAddons(addons));
+      thunkApi.dispatch(setAddonCategories(addonCategories));
+      thunkApi.dispatch(setTables(tables));
+      thunkApi.dispatch(setDisableLocationMenus(disabledLocationMenus));
       thunkApi.dispatch(
-        setDisableLocationMenuCategories(disableLocationMenuCategory)
+        setDisableLocationMenuCategories(disabledLocationMenuCategories)
       );
-      thunkApi.dispatch(setMenuAddonCategory(menuAddonCategory));
-
+      thunkApi.dispatch(setMenuAddonCategory(menuAddonCategories));
+      thunkApi.dispatch(setOrders(orders));
+      thunkApi.dispatch(setCompany(company));
+      thunkApi.dispatch(setUser(user));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

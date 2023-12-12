@@ -31,9 +31,15 @@ export default async function handler(
     );
     return res.status(200).json({ menu, menuCategoryMenus });
   } else if (method === "PUT") {
-    const { id, name, menuCategoryIds, price, isAvailable, locationId } =
-      req.body;
-    console.log(id, name, menuCategoryIds, price, isAvailable, locationId);
+    const {
+      id,
+      name,
+      menuCategoryIds,
+      price,
+      isAvailable,
+      locationId,
+      assetUrl,
+    } = req.body;
     const isValid =
       id &&
       name.trim() !== "" &&
@@ -42,10 +48,16 @@ export default async function handler(
       isAvailable !== undefined &&
       locationId;
     if (!isValid) return res.status(400).send("data is required");
+    const exist = await prisma.menu.findFirst({ where: { id } });
+    if (!exist) return res.status(400).send("Bad request");
     const menu = await prisma.menu.update({
-      data: { name, price },
+      data: { name, price, assetUrl },
       where: { id },
     });
+    // if (exist.assetUrl && exist.assetUrl !== assetUrl) {
+    //   await deleteOldMenuImage(assetUrl);
+    // }
+
     //delete menuCategoryMenu
     await prisma.menuCategoryMenu.deleteMany({ where: { menuId: id } });
     //update menuCategoryMenus
@@ -61,27 +73,40 @@ export default async function handler(
         })
       )
     );
-    if (locationId) {
-      if (isAvailable === false) {
-        // if data exist we don't have to do any thing but don't exist have to create a new data on disableLocationMenus
-        const exist = await prisma.disabledLocationMenu.findFirst({
-          where: { menuId: id },
-        });
-        if (!exist) {
-          await prisma.disabledLocationMenu.create({
-            data: { locationId, menuId: id },
-          });
-        }
-      } else {
-        // to delete the data on disableLocationMenus data with menuIds
-        await prisma.disabledLocationMenu.deleteMany({
-          where: { locationId, menuId: id },
+    if (locationId && isAvailable === false) {
+      const exist = await prisma.disabledLocationMenu.findFirst({
+        where: { menuId: id, locationId: locationId },
+      });
+      if (!exist) {
+        await prisma.disabledLocationMenu.create({
+          data: { menuId: id, locationId },
         });
       }
-    } else {
+    } else if (locationId && isAvailable === true) {
+      const exist = await prisma.disabledLocationMenu.findFirst({
+        where: { menuId: id, locationId: locationId },
+      });
+      if (exist) {
+        await prisma.disabledLocationMenu.delete({
+          where: { id: exist.id },
+        });
+      }
     }
+    const dbUser = await prisma.user.findUnique({
+      where: { email: session.user?.email as string },
+    });
+    const allMenuCategoryIds = (
+      await prisma.menuCategory.findMany({
+        where: { companyId: dbUser?.companyId },
+      })
+    ).map((item) => item.id);
+    const menuIds = (
+      await prisma.menuCategoryMenu.findMany({
+        where: { menuCategoryId: { in: allMenuCategoryIds } },
+      })
+    ).map((item) => item.menuId);
     const disabledLocationMenus = await prisma.disabledLocationMenu.findMany({
-      where: { locationId, menuId: id },
+      where: { menuId: { in: menuIds } },
     });
     return res
       .status(200)

@@ -76,7 +76,7 @@ const TableDetail = () => {
         flexDirection: "column",
         alignItems: "center",
         gap: 2,
-        width: 600,
+        width: { lg: 600 },
       }}
     >
       <Box
@@ -99,7 +99,7 @@ const TableDetail = () => {
       </Box>
       <TextField
         label="name"
-        sx={{ width: 400 }}
+        sx={{ width: { xs: "100%", lg: 400 } }}
         defaultValue={data.name}
         onChange={(e) => {
           setData({ ...data, id: table.id, name: e.target.value });
@@ -107,7 +107,12 @@ const TableDetail = () => {
       />
 
       <Box
-        sx={{ width: 400, display: "flex", justifyContent: "center", gap: 2 }}
+        sx={{
+          width: { xs: "90%", lg: 400 },
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+        }}
       >
         <Button
           variant="contained"
