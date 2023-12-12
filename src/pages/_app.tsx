@@ -22,20 +22,34 @@ export default function App({ Component, pageProps }: AppProps) {
     prefersDarkMode
   );
 
+  const lightModeColors = {
+    primary: { main: "#DD5903" },
+    secondary: { main: "#FFE194" },
+    textSecondary: { main: "#6D6A7C" },
+    success: { main: "#1F1F1F" },
+    info: { main: "#E8F6EF" },
+    container: { main: "#fff" },
+  };
+
+  const darkModeColors = {
+    primary: { main: "#DD5903" },
+    secondary: { main: "#FFE194" },
+    textSecondary: { main: "#6D6A7C" },
+    success: { main: "#1F1F1F" },
+    info: { main: "#E8F6EF" },
+    container: { main: "#1F1F1F" },
+  };
+
+  // Define your theme options
   const themeOptions: ThemeOptions = {
     palette: {
       mode: isDarkMode ? "dark" : "light",
-      primary: {
-        main: "#4C4C6D",
-      },
-      secondary: {
-        main: "#FFE194",
-      },
-      info: {
-        main: "#E8F6EF",
-      },
-      success: {
-        main: "#189C85",
+      ...(!isDarkMode && { ...lightModeColors }),
+      ...(isDarkMode && { ...darkModeColors }),
+    },
+    typography: {
+      button: {
+        textTransform: "none",
       },
     },
   };

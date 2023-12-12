@@ -3,6 +3,7 @@ import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setAddonCategories } from "./addonCategorySlice";
 import { setAddons } from "./addonSlice";
+import { setCompany } from "./companySlice";
 import { setDisableLocationMenuCategories } from "./disableLocationMenuCategorySlice";
 import { setDisableLocationMenus } from "./disableLocationMenuSlice";
 import { setLocations } from "./locationSlice";
@@ -10,8 +11,9 @@ import { setMenuAddonCategory } from "./menuAddonCategorySlice";
 import { setMenuCategoryMenus } from "./menuCategoryMenuSlice";
 import { setMenuCategories } from "./menuCategorySlice";
 import { setMenus } from "./menuSlices";
-import { toggleSnackbar } from "./snackbarSlice";
+import { setOrders } from "./orderSlice";
 import { setTables } from "./tableSlice";
+import { setUser } from "./userSlice";
 
 const initialState: AppSlice = {
   init: false,
@@ -37,8 +39,11 @@ export const fetchAppData = createAsyncThunk(
         menuAddonCategories,
         addons,
         tables,
+        orders,
         disabledLocationMenus,
         disabledLocationMenuCategories,
+        company,
+        user,
       } = appData;
 
       thunkApi.dispatch(setInit(true));
@@ -57,8 +62,10 @@ export const fetchAppData = createAsyncThunk(
         setDisableLocationMenuCategories(disabledLocationMenuCategories)
       );
       thunkApi.dispatch(setMenuAddonCategory(menuAddonCategories));
-
-      onSuccess && onSuccess(() => thunkApi.dispatch(toggleSnackbar("app ")));
+      thunkApi.dispatch(setOrders(orders));
+      thunkApi.dispatch(setCompany(company));
+      thunkApi.dispatch(setUser(user));
+      onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
     }

@@ -31,8 +31,15 @@ export default async function handler(
     );
     return res.status(200).json({ menu, menuCategoryMenus });
   } else if (method === "PUT") {
-    const { id, name, menuCategoryIds, price, isAvailable, locationId } =
-      req.body;
+    const {
+      id,
+      name,
+      menuCategoryIds,
+      price,
+      isAvailable,
+      locationId,
+      assetUrl,
+    } = req.body;
     const isValid =
       id &&
       name.trim() !== "" &&
@@ -41,10 +48,15 @@ export default async function handler(
       isAvailable !== undefined &&
       locationId;
     if (!isValid) return res.status(400).send("data is required");
+    const exist = await prisma.menu.findFirst({ where: { id } });
+    if (!exist) return res.status(400).send("Bad request");
     const menu = await prisma.menu.update({
-      data: { name, price },
+      data: { name, price, assetUrl },
       where: { id },
     });
+    // if (exist.assetUrl && exist.assetUrl !== assetUrl) {
+    //   await deleteOldMenuImage(assetUrl);
+    // }
 
     //delete menuCategoryMenu
     await prisma.menuCategoryMenu.deleteMany({ where: { menuId: id } });

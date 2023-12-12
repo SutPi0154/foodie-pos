@@ -17,11 +17,10 @@ const MenuCard = ({ menu, href, isAvailable }: Props) => {
       style={{
         textDecoration: "none",
         opacity: isAvailable === false ? 0.4 : 1,
-        marginRight: "15px",
         marginBottom: "20px",
       }}
     >
-      <Card sx={{ width: 350, pb: 2 }}>
+      <Card sx={{ width: 300, pb: 2 }}>
         <CardMedia
           sx={{
             height: 250,
@@ -36,9 +35,9 @@ const MenuCard = ({ menu, href, isAvailable }: Props) => {
           <Typography gutterBottom variant="h6" sx={{ mb: 0 }}>
             {menu.name}
           </Typography>
-          <Box sx={{ display: "flex" }}>
-            <PaidIcon color="success" />
-            <Typography>{menu.price}</Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <PaidIcon color="primary" />
+            <Typography sx={{ color: "primary.main" }}>{menu.price}</Typography>
           </Box>
         </CardContent>
       </Card>

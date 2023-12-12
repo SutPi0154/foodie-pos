@@ -29,7 +29,15 @@ const TablesPage = () => {
           New Table
         </Button>
       </Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap", mt: 4, gap: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          mt: 4,
+          gap: 4,
+          justifyContent: { xs: "center", sm: "flex-start" },
+        }}
+      >
         {tables.map((item) => (
           <Box
             key={item.id}

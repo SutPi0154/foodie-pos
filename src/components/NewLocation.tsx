@@ -20,7 +20,9 @@ interface NewLocation {
 }
 const defaultNewLocation = {
   name: "",
-  address: "",
+  street: "",
+  city: "",
+  township: "",
 };
 const NewLocation = ({ open, setOpen }: Props) => {
   const [newLocation, setNewLocation] = useState(defaultNewLocation);
@@ -41,7 +43,7 @@ const NewLocation = ({ open, setOpen }: Props) => {
       <DialogTitle>Create new Location </DialogTitle>
       <DialogContent>
         <Box>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
             <TextField
               label="name"
               onChange={(e) => {
@@ -49,9 +51,21 @@ const NewLocation = ({ open, setOpen }: Props) => {
               }}
             />
             <TextField
-              label="address"
+              label="street"
               onChange={(e) => {
-                setNewLocation({ ...newLocation, address: e.target.value });
+                setNewLocation({ ...newLocation, street: e.target.value });
+              }}
+            />
+            <TextField
+              label="township"
+              onChange={(e) => {
+                setNewLocation({ ...newLocation, township: e.target.value });
+              }}
+            />
+            <TextField
+              label="city"
+              onChange={(e) => {
+                setNewLocation({ ...newLocation, city: e.target.value });
               }}
             />
           </Box>
@@ -66,6 +80,7 @@ const NewLocation = ({ open, setOpen }: Props) => {
           >
             <Button
               variant="contained"
+              color="info"
               onClick={() => {
                 setOpen(false);
               }}
@@ -74,7 +89,12 @@ const NewLocation = ({ open, setOpen }: Props) => {
             </Button>
             <Button
               variant="contained"
-              disabled={newLocation.name && newLocation.address ? false : true}
+              disabled={
+                !newLocation.name.trim() ||
+                !newLocation.street.trim() ||
+                !newLocation.township.trim() ||
+                !newLocation.city.trim()
+              }
               onClick={() => {
                 dispatch(
                   createNewLocation({

@@ -1,4 +1,8 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import QRCode from "qrcode";
@@ -51,5 +55,18 @@ export const qrCodeImageUpload = async (tableId: number) => {
     await s3Client.send(command);
   } catch (err) {
     console.error(err);
+  }
+};
+export const deleteOldMenuImage = async (assetUrl: string) => {
+  try {
+    const input = {
+      Bucket: "msquarefdc",
+      Key: assetUrl.split(".com")[1],
+    };
+
+    const command = new DeleteObjectCommand(input);
+    await s3Client.send(command);
+  } catch (error) {
+    console.error(error);
   }
 };

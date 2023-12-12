@@ -33,7 +33,10 @@ const AddonCategories = ({
               <Typography variant="h6" sx={{ userSelect: "none" }}>
                 {item.name}
               </Typography>
-              <Chip label={item.isRequired ? "required" : "Optional"}></Chip>
+              <Chip
+                label={item.isRequired ? "required" : "Optional"}
+                color="primary"
+              ></Chip>
             </Box>
             <Box sx={{ pl: 1, mt: 2 }}>
               <Addons

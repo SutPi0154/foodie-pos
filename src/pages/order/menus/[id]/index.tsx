@@ -3,10 +3,9 @@ import QuantitySelector from "@/components/QuantitySelector";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
 import { CartItem } from "@/types/cart";
-import { generateRandomId } from "@/utils/general";
-import { Box, Button } from "@mui/material";
-import { Addon } from "@prisma/client";
-import Image from "next/image";
+import { Box, Button, CardMedia } from "@mui/material";
+import { Addon, MenuAddonCategory } from "@prisma/client";
+import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -22,10 +21,10 @@ const MenuDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState<Addon[]>([]);
   const [isDisable, setIsDisable] = useState<boolean>(true);
-  const allMenuAddonCategories = useAppSelector(
+  const allMenuAddonCategories: MenuAddonCategory[] = useAppSelector(
     (store) => store.menuAddonCategory.items
   );
-  const addonCategoryIds = allMenuAddonCategories
+  const addonCategoryIds: number[] = allMenuAddonCategories
     .filter((item) => item.menuId === menuId)
     .map((item) => item.addonCategoryId);
   const addonCategories = useAppSelector(
@@ -57,7 +56,7 @@ const MenuDetail = () => {
   const handleAddToCart = () => {
     if (!menu) return;
     const newCartItem: CartItem = {
-      id: cartItem ? cartItem.id : generateRandomId(),
+      id: cartItem ? cartItem.id : nanoid(7),
       menu,
       addons: selectedAddons,
       quantity,
@@ -76,7 +75,7 @@ const MenuDetail = () => {
   if (!isReady || !menu) return null;
 
   return (
-    <Box sx={{ position: "relative", zIndex: 5 }}>
+    <Box sx={{ position: "relative", zIndex: 10, top: 40 }}>
       <Box
         sx={{
           display: "flex",
@@ -85,19 +84,16 @@ const MenuDetail = () => {
           p: 4,
         }}
       >
-        <Image
-          src={menu.assetUrl || "/default-menu.png"}
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{
-            width: "25%",
-            height: "auto",
-            margin: "0 auto",
-            borderRadius: "20px",
+        <CardMedia
+          image={menu.assetUrl || "/default-menu.png"}
+          component={"div"}
+          sx={{
+            height: 250,
+            width: "auto",
+            backgroundSize: "contain",
+            borderRadius: 3,
           }}
-          alt="menu img"
-        />
+        ></CardMedia>
       </Box>
       <Box
         sx={{
@@ -121,7 +117,7 @@ const MenuDetail = () => {
           variant="contained"
           disabled={isDisable}
           onClick={handleAddToCart}
-          sx={{ width: "fit-content", mt: 3 }}
+          sx={{ width: "fit-content", mt: 3, mb: 5 }}
         >
           {cartItem ? "Update Cart" : "Add to Cart"}
         </Button>

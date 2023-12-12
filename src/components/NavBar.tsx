@@ -1,10 +1,13 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setCloseDrawer, setOpenDrawer } from "@/store/slices/openDrawerSlice";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
   Avatar,
   Box,
+  Drawer,
   IconButton,
   Menu,
   MenuItem,
@@ -15,6 +18,7 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import SideBar from "./SideBar";
 
 interface ThemeToggleProps {
   isDarkMode: boolean;
@@ -25,7 +29,8 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
   const locations = useAppSelector((store) => store.location.items);
   const { selectedLocation } = useAppSelector((store) => store.location);
   const { data: session } = useSession();
-
+  const openDrawer = useAppSelector((store) => store.openDrawer.open);
+  const dispatch = useAppDispatch();
   const handleThemeToggle = () => {
     setDarkMode(!isDarkMode);
   };
@@ -43,6 +48,7 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
       position="static"
       sx={{
         bgcolor: "success.main",
+        width: "100%",
       }}
     >
       <Toolbar
@@ -50,23 +56,26 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          mx: 10,
+          mx: { xs: 2, sm: 5, lg: 10 },
           my: 1,
         }}
       >
-        <Image
-          src={"/logo.png"}
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "10%", height: "auto" }}
-          alt="logo"
-        ></Image>
+        <Box sx={{ display: { xs: "none", sm: "none", md: "block" } }}>
+          <Image
+            alt="logo"
+            src={"/logo.png"}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "120px", height: "auto" }}
+          />
+        </Box>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Typography variant="h5" color={"secondary"}>
@@ -79,45 +88,60 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: { xs: "start", sm: "start", md: "center" },
             alignItems: "center",
           }}
         >
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {session ? (
-                  <Avatar src={"/avatar.png"} />
-                ) : (
-                  <Avatar src={"/avatar.png"} />
-                )}
-              </IconButton>
-            </Tooltip>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="end"
+              onClick={() => {
+                dispatch(setOpenDrawer());
+              }}
+              sx={{ display: { sm: "block", md: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Box sx={{ display: { xs: "none", md: "block" } }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  {session ? (
+                    <Avatar src={"/avatar.png"} />
+                  ) : (
+                    <Avatar src={"/avatar.png"} />
+                  )}
+                </IconButton>
+              </Tooltip>
+            </Box>
             {session ? (
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem
-                  onClick={() => {
-                    signOut({ callbackUrl: "/back-office" });
+              <Box>
+                <Menu
+                  sx={{ mt: "45px", display: { xs: "none", sm: "block" } }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
                   }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
                 >
-                  <Typography textAlign="center">Sign out</Typography>
-                </MenuItem>
-              </Menu>
+                  <MenuItem
+                    onClick={() => {
+                      signOut({ callbackUrl: "/back-office" });
+                    }}
+                  >
+                    <Typography textAlign="center">Sign out</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
             ) : (
               <Menu
                 sx={{ mt: "45px" }}
@@ -149,6 +173,15 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </Box>
+        <Drawer
+          anchor="right"
+          open={openDrawer}
+          onClose={() => {
+            dispatch(setCloseDrawer());
+          }}
+        >
+          <SideBar />
+        </Drawer>
       </Toolbar>
     </AppBar>
   );

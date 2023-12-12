@@ -96,9 +96,10 @@ const MenuCategoryDetail = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         gap: 2,
-        width: 600,
+        alignItems: "center",
+        width: { xs: "100%", lg: 600 },
+        mb: 4,
       }}
     >
       <Box
@@ -121,7 +122,7 @@ const MenuCategoryDetail = () => {
       </Box>
       <TextField
         label="name"
-        sx={{ width: 400 }}
+        sx={{ width: { xs: "90%", lg: 400 } }}
         defaultValue={data.name}
         onChange={(e) => {
           setData({ ...data, id: menuCategory.id, name: e.target.value });
@@ -140,7 +141,12 @@ const MenuCategoryDetail = () => {
       />
 
       <Box
-        sx={{ width: 400, display: "flex", justifyContent: "center", gap: 2 }}
+        sx={{
+          width: { xs: "90%", lg: 400 },
+          display: "flex",
+          justifyContent: "center",
+          gap: 2,
+        }}
       >
         <Button
           variant="contained"

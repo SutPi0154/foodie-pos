@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createMenuThunk, setLoading } from "@/store/slices/menuSlices";
 import { toggleSnackbar } from "@/store/slices/snackbarSlice";
-import { CreateNewMenuOption } from "@/types/menu";
+import { CreateNewMenuOptions } from "@/types/menu";
 import { config } from "@/utils/config";
 import SaveIcon from "@mui/icons-material/Save";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -29,7 +29,7 @@ interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
-const defaultNewMenu: CreateNewMenuOption = {
+const defaultNewMenu: CreateNewMenuOptions = {
   name: "",
   assetUrl: undefined,
   price: 0,
@@ -57,8 +57,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
         method: "POST",
         body: formData,
       });
-      const responseJson = await response.json();
-      const assetUrl = responseJson.assetUrl;
+      const { assetUrl } = await response.json();
       newMenuPayload.assetUrl = assetUrl;
     }
     dispatch(
@@ -112,7 +111,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
             value={newMenu.menuCategoryIds}
             label="Menu Category"
             onChange={handleChange}
-            sx={{ width: 400 }}
+            // sx={{ width: 400 }}
             renderValue={(selectMenuCategoryIds) => {
               return selectMenuCategoryIds
                 .map((selectMenuCategoryId) => {

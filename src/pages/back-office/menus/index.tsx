@@ -24,7 +24,14 @@ const MenusPage = () => {
           New Menu
         </Button>
       </Box>
-      <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 4,
+          flexWrap: "wrap",
+          justifyContent: { xs: "center", sm: "flex-start" },
+        }}
+      >
         {menus.map((item) => {
           const isAvailable = disableLocationMenus.find(
             (disableLocationMenu) =>

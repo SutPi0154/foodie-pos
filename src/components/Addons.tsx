@@ -34,7 +34,7 @@ const Addons = ({
             key={addon.id}
             sx={{
               display: "flex",
-              justifyContent: "",
+              justifyContent: "space-between",
               alignItems: "center",
             }}
           >
@@ -44,7 +44,7 @@ const Addons = ({
               control={
                 addonCategory.isRequired ? (
                   <Radio
-                    color="success"
+                    color="primary"
                     checked={
                       selectedAddons.find((item) => item.id === addon.id)
                         ? true
@@ -60,7 +60,7 @@ const Addons = ({
                   />
                 ) : (
                   <Checkbox
-                    color="success"
+                    color="primary"
                     checked={
                       selectedAddons.find((item) => item.id === addon.id)
                         ? true

@@ -20,7 +20,14 @@ const AddonsPage = () => {
           New Addon
         </Button>
       </Box>
-      <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 4,
+          flexWrap: "wrap",
+          justifyContent: { xs: "center", sm: "flex-start" },
+        }}
+      >
         {addons.map((item) => (
           <ItemCard
             title={item.name}
