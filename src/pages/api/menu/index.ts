@@ -54,9 +54,6 @@ export default async function handler(
       data: { name, price, assetUrl },
       where: { id },
     });
-    // if (exist.assetUrl && exist.assetUrl !== assetUrl) {
-    //   await deleteOldMenuImage(assetUrl);
-    // }
 
     //delete menuCategoryMenu
     await prisma.menuCategoryMenu.deleteMany({ where: { menuId: id } });

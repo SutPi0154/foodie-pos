@@ -37,9 +37,10 @@ const LocationsPage = () => {
           <ItemCard
             key={item.id}
             title={item.name}
-            handleChangeSelectedLocation={() =>
-              dispatch(setSelectedLocation(item))
-            }
+            handleChangeSelectedLocation={() => {
+              dispatch(setSelectedLocation(item));
+              localStorage.setItem("selectedLocationId", String(item.id));
+            }}
             selected={item.id === selectedLocation.id}
             icon={<LocationOnIcon />}
           ></ItemCard>

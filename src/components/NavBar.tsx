@@ -25,12 +25,14 @@ interface ThemeToggleProps {
   setDarkMode: (darkMode: boolean) => void;
 }
 const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
+  const { data } = useSession();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const locations = useAppSelector((store) => store.location.items);
   const { selectedLocation } = useAppSelector((store) => store.location);
   const { data: session } = useSession();
   const openDrawer = useAppSelector((store) => store.openDrawer.open);
   const dispatch = useAppDispatch();
+  const showLocation = data && selectedLocation;
   const handleThemeToggle = () => {
     setDarkMode(!isDarkMode);
   };
@@ -81,9 +83,11 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
           <Typography variant="h5" color={"secondary"}>
             Foodie Pos
           </Typography>
-          <Typography color={"secondary"} sx={{ fontSize: 12 }}>
-            ( {selectedLocation?.name})
-          </Typography>
+          {showLocation && (
+            <Typography color={"secondary"} sx={{ fontSize: 12 }}>
+              ( {selectedLocation.name})
+            </Typography>
+          )}
         </Box>
         <Box
           sx={{

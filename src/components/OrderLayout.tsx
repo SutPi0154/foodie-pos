@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAppData } from "@/store/slices/appSlice";
 import { Box, Typography } from "@mui/material";
+import { ORDERSTATUS } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import OrderAppHeader from "./OrderAppHeader";
@@ -17,6 +18,14 @@ const OrderLayout = (props: Props) => {
   const isHome = router.pathname === "/order";
   const isActiveOrderPage = router.pathname.includes("active-order");
   const orders = useAppSelector((state) => state.order.items);
+  const showActiveOrderFooterBar =
+    !isActiveOrderPage &&
+    orders.length &&
+    orders.some(
+      (item) =>
+        item.status === ORDERSTATUS.COOKING ||
+        item.status === ORDERSTATUS.PENDING
+    );
 
   useEffect(() => {
     if (tableId) {
@@ -28,19 +37,17 @@ const OrderLayout = (props: Props) => {
     <Box>
       <OrderAppHeader cartItemCount={cartItems.length} />
       <Box
-        sx={{ position: "relative", top: isHome ? { xs: 150, md: 240 } : 0 }}
+        sx={{
+          position: "relative",
+          top: isHome ? { sm: 240 } : 0,
+          mb: 10,
+        }}
       >
-        <Box
-          sx={{
-            width: { xs: "100%", md: "80%", lg: "55%" },
-            m: "0 auto",
-            mb: 10,
-          }}
-        >
+        <Box sx={{ width: { xs: "100%", md: "80%", lg: "55%" }, m: "0 auto" }}>
           {props.children}
         </Box>
       </Box>
-      {orders.length && !isActiveOrderPage && (
+      {showActiveOrderFooterBar && (
         <Box
           sx={{
             height: 50,
@@ -52,7 +59,7 @@ const OrderLayout = (props: Props) => {
             alignItems: "center",
             display: "flex",
             cursor: "pointer",
-            zIndex: 6,
+            zIndex: 5,
           }}
           onClick={() =>
             router.push({
@@ -61,14 +68,7 @@ const OrderLayout = (props: Props) => {
             })
           }
         >
-          <Typography
-            sx={{
-              color: "secondary.main",
-              userSelect: "none",
-              px: 1,
-              textAlign: "center",
-            }}
-          >
+          <Typography sx={{ color: "secondary.main", userSelect: "none" }}>
             You have active order. Click here to view.
           </Typography>
         </Box>

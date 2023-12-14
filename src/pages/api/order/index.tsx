@@ -21,32 +21,31 @@ export default async function handler(
   } else if (method === "POST") {
     const { tableId, cartItems } = req.body;
     const isValid = tableId && cartItems.length;
-    if (!isValid) return res.status(400).send("bad request");
+    if (!isValid) return res.status(400).send("Bad request.");
     const order = await prisma.order.findFirst({
       where: {
         tableId,
-        status: { in: [ORDERSTATUS.COOKING, ORDERSTATUS.PENDING] },
+        status: { in: [ORDERSTATUS.PENDING, ORDERSTATUS.COOKING] },
       },
     });
-
-    const orderSeq = nanoid();
+    const orderSeq = order ? order.orderSeq : nanoid();
+    const totalPrice = order
+      ? order.totalPrice + getCartTotalPrice(cartItems)
+      : getCartTotalPrice(cartItems);
     for (const item of cartItems) {
-      let cartItem = item as CartItem;
-      const hasAddon = cartItem.addons.length > 0;
-      if (hasAddon && order) {
+      const cartItem = item as CartItem;
+      const hasAddons = cartItem.addons.length > 0;
+      if (hasAddons) {
         for (const addon of cartItem.addons) {
           await prisma.order.create({
             data: {
               menuId: cartItem.menu.id,
+              addonId: addon.id,
               quantity: cartItem.quantity,
               orderSeq,
-              addonId: addon.id,
-              status: ORDERSTATUS.PENDING,
               itemId: cartItem.id,
-              totalPrice:
-                order.orderSeq === orderSeq
-                  ? order.totalPrice + getCartTotalPrice(cartItems)
-                  : getCartTotalPrice(cartItems),
+              status: ORDERSTATUS.PENDING,
+              totalPrice,
               tableId,
             },
           });
@@ -57,36 +56,35 @@ export default async function handler(
             menuId: cartItem.menu.id,
             quantity: cartItem.quantity,
             orderSeq,
-            status: ORDERSTATUS.PENDING,
             itemId: cartItem.id,
-            totalPrice: getCartTotalPrice(cartItems),
+            status: ORDERSTATUS.PENDING,
+            totalPrice,
             tableId,
           },
         });
       }
     }
-    const orders = await prisma.order.findMany({
+    await prisma.order.updateMany({
+      data: { totalPrice },
       where: { orderSeq },
     });
+    const orders = await prisma.order.findMany({ where: { orderSeq } });
     return res.status(200).json({ orders });
   } else if (method === "PUT") {
-    const status = req.body.status as ORDERSTATUS;
-    const itemId = req.query.itemId as string;
-    const isValid = itemId && status;
+    const itemId = String(req.query.itemId);
+    const isValid = itemId && req.body.status;
     if (!isValid) return res.status(400).send("Bad request");
     const exist = await prisma.order.findFirst({ where: { itemId } });
     if (!exist) return res.status(400).send("Bad request");
-    const orderSeq = exist.orderSeq;
     await prisma.order.updateMany({
-      data: { status: status as ORDERSTATUS },
+      data: { status: req.body.status as ORDERSTATUS },
       where: { itemId },
     });
-
     const orders = await prisma.order.findMany({
       where: { tableId: exist.tableId, isArchived: false },
       orderBy: { id: "asc" },
     });
-    res.status(200).json({ orders });
+    return res.status(200).json({ orders });
   }
-  res.status(405).send("Method not allowed");
+  res.status(405).send("Method not allowed.");
 }
