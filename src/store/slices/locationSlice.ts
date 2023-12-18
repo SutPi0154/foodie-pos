@@ -19,7 +19,7 @@ export const createNewLocation = createAsyncThunk(
   async (options: CreateNewLocationOptions, thunkApi) => {
     const { name, city, township, street, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/location`, {
+      const response = await fetch(`${config.backOfficeApiUrl}/location`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, city, township, street }),
@@ -38,7 +38,7 @@ export const updateLocationThunk = createAsyncThunk(
     const { id, name, city, street, township, companyId, onSuccess, onError } =
       options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/location`, {
+      const response = await fetch(`${config.backOfficeApiUrl}/location`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ id, name, city, street, township, companyId }),
@@ -56,7 +56,7 @@ export const deleteLocationThunk = createAsyncThunk(
   async (options: DeleteLocationOptions, thunkApi) => {
     const { id, onSuccess, onError } = options;
     try {
-      await fetch(`${config.apiBaseUrl}/location?id=${id}`, {
+      await fetch(`${config.backOfficeApiUrl}/location?id=${id}`, {
         method: "DELETE",
       });
       thunkApi.dispatch(removeLocation({ id }));

@@ -31,8 +31,12 @@ const OrderCard = ({ orderItem, isAdmin, handleOrderStatusUpdate }: Props) => {
           py: 1 * 0.5,
         }}
       >
-        <Typography>{orderItem.menu.name}</Typography>
-        <Typography>{orderItem.table.name}</Typography>
+        <Typography sx={{ color: "textSecondary.main" }}>
+          {orderItem.menu.name}
+        </Typography>
+        <Typography sx={{ color: "textSecondary.main" }}>
+          {orderItem.table.name}
+        </Typography>
       </Box>
       <Box
         sx={{
@@ -66,7 +70,7 @@ const OrderCard = ({ orderItem, isAdmin, handleOrderStatusUpdate }: Props) => {
           );
           return (
             <Box key={orderAddon.addonCategoryId} sx={{ mb: 2 }}>
-              <Typography sx={{}}>{addonCategory?.name}</Typography>
+              <Typography>{addonCategory?.name}</Typography>
               <Box>
                 {orderAddon.addons.map((item) => {
                   return (

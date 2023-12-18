@@ -36,7 +36,7 @@ const defaultNewMenu: CreateNewMenuOptions = {
   menuCategoryIds: [],
 };
 const NewMenu = ({ open, setOpen }: Props) => {
-  const { isLoading } = useAppSelector((item) => item.menu);
+  const { isLoading }: any = useAppSelector((item) => item.menu);
   const menuCategories = useAppSelector((state) => state.menuCategory.items);
 
   const [newMenu, setNewMenu] = useState(defaultNewMenu);
@@ -53,7 +53,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
     if (menuImage) {
       const formData = new FormData();
       formData.append("files", menuImage as Blob);
-      const response = await fetch(`${config.apiBaseUrl}/asset`, {
+      const response = await fetch(`${config.backOfficeApiUrl}/asset`, {
         method: "POST",
         body: formData,
       });

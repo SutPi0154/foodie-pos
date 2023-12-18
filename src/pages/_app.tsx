@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const lightModeColors = {
     primary: { main: "#DD5903" },
     secondary: { main: "#FFE194" },
-    textSecondary: { main: "#6D6A7C" },
+    textSecondary: { main: "#E8F6EF" },
     success: { main: "#1F1F1F" },
     info: { main: "#E8F6EF" },
     container: { main: "#fff" },
@@ -34,9 +34,9 @@ export default function App({ Component, pageProps }: AppProps) {
   const darkModeColors = {
     primary: { main: "#DD5903" },
     secondary: { main: "#FFE194" },
-    textSecondary: { main: "#6D6A7C" },
+    textSecondary: { main: "#E8F6EF" },
     success: { main: "#1F1F1F" },
-    info: { main: "#E8F6EF" },
+    info: { main: "#1F1F1F" },
     container: { main: "#1F1F1F" },
   };
 

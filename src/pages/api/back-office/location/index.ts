@@ -8,18 +8,22 @@ export default async function handler(
 ) {
   const method = req.method;
   if (method == "POST") {
-    const { name, city, township, street, companyId } = req.body;
+    // const { name, city, township, street } = req.body;
+
+    // if (!isValid)
+    const { name, street, township, city, companyId } = req.body;
+    // data validation
     const isValid =
       name.trim() !== "" &&
       city.trim() !== "" &&
       street.trim() !== "" &&
-      township.trim() !== "";
-    if (!isValid)
-      return res.status(400).send("userName and address is not found");
-    const newLocation = await prisma.location.create({
-      data: { name, city, township, street, companyId },
+      township.trim() !== "" &&
+      companyId;
+    if (!isValid) return res.status(400).send("Bad request.");
+    const createdLocation = await prisma.location.create({
+      data: { name, street, township, city, companyId },
     });
-    return res.status(200).json(newLocation);
+    return res.status(200).json(createdLocation);
   } else if (method === "PUT") {
     const { id, name, city, street, township, companyId } = req.body;
     const isValid =

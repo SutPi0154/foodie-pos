@@ -46,24 +46,27 @@ const OrderApp = () => {
   return (
     <Box sx={{ position: "relative", zIndex: 5, px: 2 }}>
       <Tabs
-        TabIndicatorProps={{
-          style: { background: "" },
-        }}
+        TabIndicatorProps={{}}
         value={value}
         onChange={(evt, value) => setValue(value)}
         variant="scrollable"
         sx={{
           ".Mui-selected": {
             color: "",
+            hover: {
+              "&:hover": {
+                color: "green !important",
+              },
+            },
+
             fontWeight: "bold",
           },
-          position: "fixed",
           width: {
-            xs: "350px",
-            sm: "650px",
-            md: "780px",
-            lg: "1000px",
-            xl: "1200px",
+            // xs: "350px",
+            // sm: "650px",
+            // md: "780px",
+            // lg: "900px",
+            // xl: "1000px",
           },
           bgcolor: "container.main",
         }}
@@ -73,7 +76,7 @@ const OrderApp = () => {
             <Tab
               key={item.id}
               label={item.name}
-              sx={{ color: "" }}
+              sx={{}}
               onClick={() => setSelectedMenuCategory(item)}
             />
           );
@@ -92,16 +95,14 @@ const OrderApp = () => {
           },
           height: "70vh",
           my: 4,
-          width: {
-            xs: "350px",
-            sm: "650px",
-            md: "780px",
-            lg: "1000px",
-            xl: "1100px",
-          },
+          // width: {
+          //   xs: "350px",
+          //   sm: "650px",
+          //   md: "780px",
+          //   lg: "900px",
+          //   xl: "1000px",
+          // },
           gap: 2,
-          overflow: "hidden",
-          overflowY: "scroll",
         }}
       >
         {renderMenus()}

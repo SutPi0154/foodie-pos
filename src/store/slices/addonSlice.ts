@@ -18,7 +18,7 @@ export const createAddonThunk = createAsyncThunk(
   async (options: CreateAddonOptions, thunkApi) => {
     const { name, price, addonCategoryId, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/addon`, {
+      const response = await fetch(`${config.backOfficeApiUrl}/addon`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, price, addonCategoryId }),
@@ -37,7 +37,7 @@ export const updateAddonThunk = createAsyncThunk(
   async (options: UpdateAddonOption, thunkApi) => {
     const { id, name, addonCategoryId, price, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/addon`, {
+      const response = await fetch(`${config.backOfficeApiUrl}/addon`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ id, name, addonCategoryId, price }),
@@ -55,7 +55,7 @@ export const deleteAddonThunk = createAsyncThunk(
   async (options: DeleteAddonOption, thunkApi) => {
     const { id, onSuccess, onError } = options;
     try {
-      await fetch(`${config.apiBaseUrl}/addon?id=${id}`, {
+      await fetch(`${config.backOfficeApiUrl}/addon?id=${id}`, {
         method: "DELETE",
       });
       thunkApi.dispatch(removeAddon({ id }));

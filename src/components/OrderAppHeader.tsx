@@ -2,7 +2,6 @@ import { useAppSelector } from "@/store/hooks";
 import Home from "@mui/icons-material/Home";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { Box, Typography } from "@mui/material";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -19,12 +18,11 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
   const company = useAppSelector((state) => state.company.item);
 
   return (
-    <Box>
+    <>
       <Box
         sx={{
           bgcolor: "success.main",
-          height: 60,
-          px: 2,
+          width: "100%",
           display: { xs: "flex", sm: "none" },
           justifyContent: "space-between",
           alignItems: "center",
@@ -33,53 +31,11 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
         <Typography
           sx={{
             fontWeight: "bold",
-            fontSize: {},
             color: "info.main",
           }}
         >
           {company?.name}
         </Typography>
-        <Box sx={{ position: "relative" }}>
-          {isCartOrActiveOrderPage ? (
-            <Home
-              onClick={() =>
-                router.push({
-                  pathname: "/order",
-                  query: { tableId: router.query.tableId },
-                })
-              }
-              sx={{
-                fontSize: "40px",
-                color: "#FFE194",
-              }}
-            />
-          ) : (
-            <>
-              <ShoppingCartCheckoutIcon
-                onClick={() =>
-                  router.push({ pathname: "/order/cart", query: router.query })
-                }
-                sx={{
-                  fontSize: "40px",
-                  color: "#FFE194",
-                }}
-              />
-              {cartItemCount > 0 && (
-                <Typography
-                  sx={{
-                    textAlign: "right",
-                    color: "#E8F6EF",
-                    position: "absolute",
-                    top: -10,
-                    right: -10,
-                  }}
-                >
-                  {cartItemCount}
-                </Typography>
-              )}
-            </>
-          )}
-        </Box>
       </Box>
       <Box
         sx={{
@@ -87,7 +43,6 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
           display: { xs: "none", sm: "flex" },
           flexDirection: "column",
           alignItems: "center",
-          position: "fixed",
           zIndex: 5,
           top: 0,
         }}
@@ -110,7 +65,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
               }
               sx={{
                 fontSize: "40px",
-                color: "#FFE194",
+                color: "primary.light",
               }}
             />
           ) : (
@@ -121,7 +76,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
                 }
                 sx={{
                   fontSize: "40px",
-                  color: "#FFE194",
+                  color: "primary.light",
                 }}
               />
               {cartItemCount > 0 && (
@@ -129,7 +84,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
                   variant="h5"
                   sx={{
                     textAlign: "right",
-                    color: "#E8F6EF",
+                    color: "primary.light",
                     position: "absolute",
                     top: -10,
                     right: -10,
@@ -142,14 +97,6 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
           )}
         </Box>
 
-        <Image
-          src="/order-app-header.svg"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
-          alt="header-image"
-        />
         {isHome && (
           <Box sx={{ position: "absolute" }}>
             <Box sx={{ textAlign: "center" }}>
@@ -174,7 +121,7 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
           </Box>
         )}
       </Box>
-    </Box>
+    </>
   );
 };
 
