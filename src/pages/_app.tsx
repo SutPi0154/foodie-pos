@@ -8,7 +8,6 @@ import {
   createTheme,
   useMediaQuery,
 } from "@mui/material";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
@@ -71,7 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <SnackBar />
           </Layout>
           <CssBaseline />
-          <SpeedInsights />
+          {/* <SpeedInsights /> */}
         </ThemeProvider>
       </Provider>
     </SessionProvider>
