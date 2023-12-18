@@ -14,7 +14,6 @@ import { setMenus } from "./menuSlices";
 import { setOrders } from "./orderSlice";
 import { setTables } from "./tableSlice";
 import { setUser } from "./userSlice";
-
 const initialState: AppSlice = {
   init: false,
   isLoading: false,
@@ -26,8 +25,8 @@ export const fetchAppData = createAsyncThunk(
     const { onSuccess, onError, tableId } = options;
     try {
       const appDataUrl = tableId
-        ? `${config.apiBaseUrl}/app?tableId=${tableId}`
-        : `${config.apiBaseUrl}/app`;
+        ? `${config.orderApiUrl}/app?tableId=${tableId}`
+        : `${config.backOfficeApiUrl}/app`;
       const response = await fetch(appDataUrl);
       const appData = await response.json();
       const {
@@ -46,11 +45,11 @@ export const fetchAppData = createAsyncThunk(
         user,
       } = appData;
 
-      thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setLocations(locations));
       if (!localStorage.getItem("selectedLocationId")) {
         localStorage.setItem("selectedLocationId", locations[0].id);
       }
+      thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setMenuCategories(menuCategories));
       thunkApi.dispatch(setMenus(menus));
       thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenus));
@@ -65,6 +64,7 @@ export const fetchAppData = createAsyncThunk(
       thunkApi.dispatch(setOrders(orders));
       thunkApi.dispatch(setCompany(company));
       thunkApi.dispatch(setUser(user));
+
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -76,8 +76,8 @@ const appSlice = createSlice({
   name: "appSlice",
   initialState,
   reducers: {
-    setInit: (state, action) => {
-      state.init = action.payload;
+    setInit: (state, { payload }) => {
+      state.init = payload;
     },
   },
 });

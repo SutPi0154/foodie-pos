@@ -1,23 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { prisma } from "@/utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(401).send("Unauthorized");
   const method = req.method;
   if (method === "POST") {
     const { name, locationId } = req.body;
     const isValid = name && locationId;
-    if (!isValid) return res.status(400).send("bad request");
     const location = await prisma.location.findFirst({
       where: { id: locationId },
     });
+    if (!isValid) return res.status(400).send("bad request");
+
     if (!location) return res.status(400).send("Bad Request");
     const menuCategory = await prisma.menuCategory.create({
       data: { name, companyId: location?.companyId },
@@ -29,6 +26,9 @@ export default async function handler(
     if (!isValid) return res.status(400).send("bad request");
     const isExist = await prisma.menuCategory.findFirst({ where: { id } });
     if (!isExist) return res.status(400).send("bad request");
+    const location = await prisma.location.findFirst({
+      where: { id: locationId },
+    });
     const menuCategory = await prisma.menuCategory.update({
       data: { name },
       where: { id },
@@ -84,12 +84,10 @@ export default async function handler(
           });
         }
       }
-      const dbUser = await prisma.user.findUnique({
-        where: { email: session.user?.email as string },
-      });
+
       const menuCategoryIds = (
         await prisma.menuCategory.findMany({
-          where: { companyId: dbUser?.companyId },
+          where: { companyId: location?.companyId },
         })
       ).map((item) => item.id);
       const disabledLocationMenuCategory =
@@ -121,12 +119,10 @@ export default async function handler(
         });
       }
     }
-    const dbUser = await prisma.user.findUnique({
-      where: { email: session.user?.email as string },
-    });
+
     const menuCategoryIds = (
       await prisma.menuCategory.findMany({
-        where: { companyId: dbUser?.companyId },
+        where: { companyId: location?.companyId },
       })
     ).map((item) => item.id);
     const disabledLocationMenuCategory =
@@ -209,126 +205,6 @@ export default async function handler(
       where: { id: menuCategoryId },
     });
     return res.status(200).send("Deleted.");
-    // const menuCategoryMenuRows = await prisma.menuCategoryMenu.findMany({
-    //   where: { menuCategoryId },
-    // });
-    // const menuIds = menuCategoryMenuRows.map((item) => item.menuId);
-
-    // if menu Category is only connected to the menu connection
-    // if (menuCategoryMenuRows.length === 1) {
-    //   const menuId = menuCategoryMenuRows[0].menuId;
-
-    //   const totalMenuCategoryConnection =
-    //     await prisma.menuCategoryMenu.findMany({
-    //       where: { menuId, isArchived: false },
-    //     });
-    //   // if menu is only connected to the only one menu category
-    //   if (totalMenuCategoryConnection.length === 1) {
-    //     const totalAddonCategoryConnection =
-    //       await prisma.menuAddonCategory.findMany({
-    //         where: { menuId, isArchived: false },
-    //       });
-
-    //     // menu has addon category if length = 0
-    //     if (totalAddonCategoryConnection.length) {
-    //       const addonCategoryIds = totalAddonCategoryConnection.map(
-    //         (item) => item.addonCategoryId
-    //       );
-
-    //       addonCategoryIds.map(async (addonCategoryId) => {
-    //         const totalMenAddonCategoryConnections =
-    //           await prisma.menuAddonCategory.findMany({
-    //             where: { addonCategoryId, isArchived: false },
-    //           });
-    //         if (totalMenAddonCategoryConnections.length) {
-    //           // update menuAddonCategory
-    //           await prisma.menuAddonCategory.updateMany({
-    //             where: { menuId, addonCategoryId },
-    //             data: { isArchived: true },
-    //           });
-    //           // update addon category
-    //           await prisma.addonCategory.update({
-    //             data: { isArchived: true },
-    //             where: { id: addonCategoryId },
-    //           });
-    //           // addon
-    //           await prisma.addon.updateMany({
-    //             data: { isArchived: true },
-    //             where: { addonCategoryId },
-    //           });
-    //         }
-    //       });
-    //     }
-    //     // update menu
-    //     await prisma.menu.update({
-    //       data: { isArchived: true },
-    //       where: { id: menuId },
-    //     });
-    //   }
-    //   // update menuCategoryMenu table
-    //   await prisma.menuCategoryMenu.updateMany({
-    //     data: { isArchived: true },
-    //     where: { menuCategoryId, menuId },
-    // });
-    // if menu Category is  connected many menu connection
-
-    //   menuIds.forEach(async (menuId) => {
-    //     const totalMenuCategoryConnections =
-    //       await prisma.menuCategoryMenu.findMany({
-    //         where: { menuId, isArchived: false },
-    //       });
-
-    //     if (totalMenuCategoryConnections.length === 1) {
-    //       const totalAddonCategoryConnections =
-    //         await prisma.menuAddonCategory.findMany({
-    //           where: { menuId, isArchived: false },
-    //         });
-    //       // get addon category id
-    //       const addonCategoryIds = totalAddonCategoryConnections.map(
-    //         (item) => item.addonCategoryId
-    //       );
-    //       addonCategoryIds.map(async (addonCategoryId) => {
-    //         const totalMenuAddonCategoryConnections =
-    //           await prisma.menuAddonCategory.findMany({
-    //             where: { addonCategoryId, isArchived: false },
-    //           });
-    //         if (totalMenuAddonCategoryConnections.length === 1) {
-    //           // update menuAddonCategory
-    //           await prisma.menuAddonCategory.updateMany({
-    //             where: { menuId, addonCategoryId },
-    //             data: { isArchived: true },
-    //           });
-    //           // update addon category
-    //           await prisma.addonCategory.update({
-    //             data: { isArchived: true },
-    //             where: { id: addonCategoryId },
-    //           });
-    //           // addon
-    //           await prisma.addon.updateMany({
-    //             data: { isArchived: true },
-    //             where: { addonCategoryId },
-    //           });
-    //         }
-    //       });
-    //       // update menu
-    //       await prisma.menu.update({
-    //         data: { isArchived: true },
-    //         where: { id: menuId },
-    //       });
-    //     }
-    //   });
-    // }
-    // menuIds.forEach(async (menuId) => {
-    //   await prisma.menuCategoryMenu.updateMany({
-    //     data: { isArchived: true },
-    //     where: { menuCategoryId, menuId },
-    //   });
-    // });
-
-    // await prisma.menuCategory.update({
-    //   data: { isArchived: true },
-    //   where: { id: menuCategoryId },
-    // });
   }
 
   res.status(405).send("Method not allowed");

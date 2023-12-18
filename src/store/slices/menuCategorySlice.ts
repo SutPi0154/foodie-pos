@@ -27,7 +27,7 @@ export const createMenuCategory = createAsyncThunk(
   async (options: CreateMenuCategoryOptions, thunkApi) => {
     const { name, locationId, onSuccess, onError } = options;
     try {
-      const api = await fetch(`${config.apiBaseUrl}/menu-category`, {
+      const api = await fetch(`${config.backOfficeApiUrl}/menu-category`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, locationId }),
@@ -47,7 +47,7 @@ export const updateMenuCategoryThunk = createAsyncThunk(
     const { id, name, companyId, isAvailable, locationId, onSuccess, onError } =
       options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/menu-category`, {
+      const response = await fetch(`${config.backOfficeApiUrl}/menu-category`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ id, name, companyId, isAvailable, locationId }),
@@ -96,7 +96,7 @@ export const deleteMenuCategoryThunk = createAsyncThunk(
     const { id, onSuccess, onError } = options;
     try {
       const response = await fetch(
-        `${config.apiBaseUrl}/menu-category?id=${id}`,
+        `${config.backOfficeApiUrl}/menu-category?id=${id}`,
         {
           method: "DELETE",
         }

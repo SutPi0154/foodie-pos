@@ -21,14 +21,13 @@ export default function App({ Component, pageProps }: AppProps) {
     "darkMode",
     prefersDarkMode
   );
-
   const lightModeColors = {
     primary: { main: "#DD5903" },
     secondary: { main: "#FFE194" },
     textSecondary: { main: "#6D6A7C" },
     success: { main: "#1F1F1F" },
     info: { main: "#E8F6EF" },
-    container: { main: "#fff" },
+    container: { primary: "#fff" },
   };
 
   const darkModeColors = {
@@ -53,6 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
       },
     },
   };
+
   const theme = createTheme(themeOptions);
   useEffect(() => {
     if (isDarkMode) {

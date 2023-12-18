@@ -2,7 +2,7 @@ import {
   AddonCategorySlice,
   CreateAddonCategoryOptions,
   DeleteAddonCategoryOption,
-  UpdateAddonCategoryOption,
+  UpdateAddonCategoryOptions,
 } from "@/types/addonCategory";
 import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -21,11 +21,14 @@ export const createAddonCategoryThunk = createAsyncThunk(
   async (options: CreateAddonCategoryOptions, thunkApi) => {
     const { name, isRequired, menuIds, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/addon-category`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, menuIds, isRequired }),
-      });
+      const response = await fetch(
+        `${config.backOfficeApiUrl}/addon-category`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ name, menuIds, isRequired }),
+        }
+      );
       const { addonCategory, menuAddonCategory } = await response.json();
       thunkApi.dispatch(addAddonCategory(addonCategory));
       thunkApi.dispatch(addMenuAddonCategory(menuAddonCategory));
@@ -41,7 +44,7 @@ export const deleteAddonCategoryThunk = createAsyncThunk(
     const { id, onSuccess, onError } = options;
     try {
       const response = await fetch(
-        `${config.apiBaseUrl}/addon-category?id=${id}`,
+        `${config.backOfficeApiUrl}/addon-category?id=${id}`,
         {
           method: "DELETE",
         }
@@ -55,14 +58,17 @@ export const deleteAddonCategoryThunk = createAsyncThunk(
 );
 export const updateAddonCategoryThunk = createAsyncThunk(
   "addonCategories/updateAddonCategory",
-  async (options: UpdateAddonCategoryOption, thunkApi) => {
+  async (options: UpdateAddonCategoryOptions, thunkApi) => {
     const { id, name, isRequired, menuIds, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/addon-category`, {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id, name, isRequired, menuIds }),
-      });
+      const response = await fetch(
+        `${config.backOfficeApiUrl}/addon-category`,
+        {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ id, name, isRequired, menuIds }),
+        }
+      );
       const { menuAddonCategories, addonCategory } = await response.json();
       thunkApi.dispatch(replaceAddonCategory(addonCategory));
       thunkApi.dispatch(replaceMenuAddonCategory(menuAddonCategories));

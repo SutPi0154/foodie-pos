@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createNewLocation } from "@/store/slices/locationSlice";
 import { toggleSnackbar } from "@/store/slices/snackbarSlice";
 import {
@@ -25,8 +25,10 @@ const defaultNewLocation = {
   township: "",
 };
 const NewLocation = ({ open, setOpen }: Props) => {
+  const companyId = useAppSelector((store) => store.company.item?.id);
   const [newLocation, setNewLocation] = useState(defaultNewLocation);
   const dispatch = useAppDispatch();
+  if (!companyId) return null;
   return (
     <Dialog
       open={open}
@@ -99,6 +101,7 @@ const NewLocation = ({ open, setOpen }: Props) => {
                 dispatch(
                   createNewLocation({
                     ...newLocation,
+                    companyId,
                     onSuccess: () => {
                       setOpen(false);
                       setNewLocation(defaultNewLocation);

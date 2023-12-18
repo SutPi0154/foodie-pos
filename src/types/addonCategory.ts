@@ -12,7 +12,7 @@ export interface CreateAddonCategoryOptions extends BaseOptions {
   isRequired: boolean;
   menuIds: number[];
 }
-export interface UpdateAddonCategoryOption extends BaseOptions {
+export interface UpdateAddonCategoryOptions extends BaseOptions {
   id: number;
   name: string;
   isRequired: boolean;

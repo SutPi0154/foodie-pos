@@ -24,49 +24,50 @@ import {
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const MenuDetail = () => {
   const router = useRouter();
   const menuId = Number(router.query.id);
-  const menus = useAppSelector((store) => store.menu.items);
-  const menuCategoryMenus = useAppSelector(
-    (store) => store.menuCategoryMenu.items
+  const menus = useAppSelector((state) => state.menu.items);
+  const menuCategories = useAppSelector((state) => state.menuCategory.items);
+  const menuAddonCategories = useAppSelector(
+    (state) => state.menuAddonCategory.items
   );
-  const menuCategories = useAppSelector((store) => store.menuCategory.items);
-  const [data, setData] = useState<UpdateMenuOptions>();
-  const [open, setOpen] = useState(false);
-  const dispatch = useAppDispatch();
-
+  const menuCategoryMenus = useAppSelector(
+    (state) => state.menuCategoryMenu.items
+  );
   const menu = menus.find((item) => item.id === menuId);
-
-  const CurrentMenuCategoryMenu = useMemo(() => {
-    return menuCategoryMenus.filter((item) => item.menuId === menuId);
-  }, [menuCategoryMenus, menuId]);
-  const disableLocationMenu = useAppSelector(
-    (store) => store.disableLocationMenu.items
+  const currentMenuCategoryMenu = menuCategoryMenus.filter(
+    (item) => item.menuId === menuId
+  );
+  const menuCategoryIds = currentMenuCategoryMenu.map(
+    (item) => item.menuCategoryId
+  );
+  const [data, setData] = useState<UpdateMenuOptions>();
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+  const disabledLocationMenus = useAppSelector(
+    (state) => state.disableLocationMenu.items
   );
 
   useEffect(() => {
-    const selectedLocationId = Number(
-      localStorage.getItem("selectedLocationId")
-    );
     if (menu) {
-      const isDisable = disableLocationMenu.find(
-        (item) =>
-          item?.locationId === selectedLocationId && item.menuId === menuId
+      const selectedLocationId = Number(
+        localStorage.getItem("selectedLocationId")
       );
-      const menuCategoryIds = CurrentMenuCategoryMenu.map(
-        (item) => item.menuCategoryId
+      const disabledLocationMenu = disabledLocationMenus.find(
+        (item) =>
+          item.locationId === selectedLocationId && item.menuId === menuId
       );
       setData({
         ...menu,
         menuCategoryIds,
         locationId: selectedLocationId,
-        isAvailable: isDisable ? false : true,
+        isAvailable: disabledLocationMenu ? false : true,
       });
     }
-  }, [menu, CurrentMenuCategoryMenu, disableLocationMenu, menuId]);
+  }, [menu, disabledLocationMenus]);
   if (!menu || !data) {
     return (
       <Box
@@ -104,7 +105,7 @@ const MenuDetail = () => {
       const formData = new FormData();
 
       formData.append("files", file as Blob);
-      const response = await fetch(`${config.apiBaseUrl}/asset`, {
+      const response = await fetch(`${config.backOfficeApiUrl}/asset`, {
         method: "POST",
         body: formData,
       });

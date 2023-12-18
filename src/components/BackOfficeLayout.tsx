@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import NavBar from "./NavBar";
 import SideBar from "./SideBar";
@@ -13,6 +14,7 @@ interface Props {
 }
 const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const { data: session } = useSession();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { init } = useAppSelector((store) => store.app);
 
@@ -20,7 +22,10 @@ const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
     if (session) {
       dispatch(fetchAppData({}));
     }
-  }, [session, dispatch]);
+    if (!session) {
+      router.push("/back-office");
+    }
+  }, [session, dispatch, router]);
 
   return (
     <Box sx={{ height: "100%" }}>

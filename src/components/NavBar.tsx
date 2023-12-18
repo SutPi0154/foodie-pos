@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setCloseDrawer, setOpenDrawer } from "@/store/slices/openDrawerSlice";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
@@ -24,6 +24,7 @@ interface ThemeToggleProps {
   isDarkMode: boolean;
   setDarkMode: (darkMode: boolean) => void;
 }
+
 const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
   const { data } = useSession();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -36,7 +37,6 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
   const handleThemeToggle = () => {
     setDarkMode(!isDarkMode);
   };
-
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -174,7 +174,7 @@ const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
             )}
           </Box>
           <IconButton color="inherit" onClick={handleThemeToggle}>
-            {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+            {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
         </Box>
         <Drawer

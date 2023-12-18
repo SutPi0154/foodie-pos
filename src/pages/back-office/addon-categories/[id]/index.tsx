@@ -4,7 +4,7 @@ import {
   updateAddonCategoryThunk,
 } from "@/store/slices/addonCategorySlice";
 import { toggleSnackbar } from "@/store/slices/snackbarSlice";
-import { UpdateAddonCategoryOption } from "@/types/addonCategory";
+import { UpdateAddonCategoryOptions } from "@/types/addonCategory";
 import {
   Box,
   Button,
@@ -24,37 +24,34 @@ import {
 } from "@mui/material";
 import { Menu } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const AddonCategoryDetail = () => {
   const router = useRouter();
   const addonCategoryId = Number(router.query.id);
-  const addonCategories = useAppSelector((store) => store.addonCategory.items);
-  const menus = useAppSelector((store) => store.menu.items);
+  const addonCategories = useAppSelector((state) => state.addonCategory.items);
+  const menuAddonCategories = useAppSelector(
+    (state) => state.menuAddonCategory.items
+  );
+  const menus = useAppSelector((state) => state.menu.items);
   const addonCategory = addonCategories.find(
     (item) => item.id === addonCategoryId
   );
-  const menuAddonCategories = useAppSelector(
-    (store) => store.menuAddonCategory.items
+  const currentMenuAddonCategories = menuAddonCategories.filter(
+    (item) => item.addonCategoryId === addonCategoryId
   );
-
+  const menuIds = currentMenuAddonCategories.map((item) => item.menuId);
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<UpdateAddonCategoryOption>();
-
-  const CurrentMenuAddonCategories = useMemo(() => {
-    return menuAddonCategories.filter(
-      (item) => item.addonCategoryId === addonCategoryId
-    );
-  }, [addonCategoryId, menuAddonCategories]);
+  const [data, setData] = useState<UpdateAddonCategoryOptions>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (addonCategory) {
-      const menuIds = CurrentMenuAddonCategories.map((item) => item.menuId);
       setData({ ...addonCategory, menuIds });
     }
-  }, [CurrentMenuAddonCategories, addonCategory]);
+  }, [addonCategory]);
+  if (!addonCategory || !data) return null;
 
-  const dispatch = useAppDispatch();
   const handleDeleteAddonCategory = () => {
     dispatch(
       deleteAddonCategoryThunk({

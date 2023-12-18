@@ -80,8 +80,16 @@ export default async function handler(
       data: { status: req.body.status as ORDERSTATUS },
       where: { itemId },
     });
+    const table = await prisma.table.findFirst({
+      where: { id: exist.tableId },
+    });
+    const tableIds = (
+      await prisma.table.findMany({
+        where: { locationId: table?.locationId },
+      })
+    ).map((item) => item.id);
     const orders = await prisma.order.findMany({
-      where: { tableId: exist.tableId, isArchived: false },
+      where: { tableId: { in: tableIds }, isArchived: false },
       orderBy: { id: "asc" },
     });
     return res.status(200).json({ orders });
