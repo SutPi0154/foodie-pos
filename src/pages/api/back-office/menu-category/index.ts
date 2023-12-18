@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   const method = req.method;
   if (method === "POST") {
+<<<<<<< HEAD
     const { name, locationId } = req.body;
     const isValid = name && locationId;
     const location = await prisma.location.findFirst({
@@ -26,6 +27,28 @@ export default async function handler(
     if (!isValid) return res.status(400).send("bad request");
     const isExist = await prisma.menuCategory.findFirst({ where: { id } });
     if (!isExist) return res.status(400).send("bad request");
+=======
+    // Data validation
+    const { name, locationId } = req.body;
+    const isValid = name && locationId;
+    if (!isValid) return res.status(400).send("Bad request.");
+    const location = await prisma.location.findFirst({
+      where: { id: locationId },
+    });
+    if (!location) return res.status(400).send("Bad request.");
+    const menuCategory = await prisma.menuCategory.create({
+      data: { name, companyId: location.companyId },
+    });
+    return res.status(200).json(menuCategory);
+  } else if (method === "PUT") {
+    const { id, name, locationId, isAvailable } = req.body;
+    const isValid = id && name;
+    if (!isValid) return res.status(400).send("Bad request.");
+    const exist = await prisma.menuCategory.findFirst({
+      where: { id },
+    });
+    if (!exist) return res.status(400).send("Bad request.");
+>>>>>>> ep-44DarkMode
     const location = await prisma.location.findFirst({
       where: { id: locationId },
     });
@@ -33,6 +56,7 @@ export default async function handler(
       data: { name },
       where: { id },
     });
+<<<<<<< HEAD
 
     const FindMenuCategoryMenu = await prisma.menuCategoryMenu.findMany({
       where: { menuCategoryId: id },
@@ -112,6 +136,20 @@ export default async function handler(
     } else if (locationId && isAvailable === true) {
       const exist = await prisma.disabledLocationMenuCategory.findFirst({
         where: { menuCategoryId: id, locationId: locationId },
+=======
+    if (locationId && isAvailable === false) {
+      const exist = await prisma.disabledLocationMenuCategory.findFirst({
+        where: { menuCategoryId: id, locationId },
+      });
+      if (!exist) {
+        await prisma.disabledLocationMenuCategory.create({
+          data: { locationId, menuCategoryId: id },
+        });
+      }
+    } else if (locationId && isAvailable === true) {
+      const exist = await prisma.disabledLocationMenuCategory.findFirst({
+        where: { menuCategoryId: id, locationId },
+>>>>>>> ep-44DarkMode
       });
       if (exist) {
         await prisma.disabledLocationMenuCategory.delete({
@@ -119,7 +157,10 @@ export default async function handler(
         });
       }
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> ep-44DarkMode
     const menuCategoryIds = (
       await prisma.menuCategory.findMany({
         where: { companyId: location?.companyId },
@@ -132,17 +173,24 @@ export default async function handler(
     return res.status(200).json({ menuCategory, disabledLocationMenuCategory });
   } else if (method === "DELETE") {
     const menuCategoryId = Number(req.query.id);
+<<<<<<< HEAD
     const menuCategory = await prisma.menuCategory.findFirst({
       where: { id: menuCategoryId },
     });
 
     if (!menuCategory) return res.status(400).send("Bad request");
+=======
+>>>>>>> ep-44DarkMode
     const menuIds = (
       await prisma.menuCategoryMenu.findMany({
         where: { menuCategoryId, isArchived: false },
       })
     ).map((item) => item.menuId);
+<<<<<<< HEAD
     const menuIdPromise = menuIds.map(async (menuId) => {
+=======
+    const menuIdsPromise = menuIds.map(async (menuId) => {
+>>>>>>> ep-44DarkMode
       const menuData = { menuId, count: 1 };
       const count = await prisma.menuCategoryMenu.count({
         where: { menuId, isArchived: false },
@@ -150,12 +198,17 @@ export default async function handler(
       menuData.count = count;
       return menuData;
     });
+<<<<<<< HEAD
     const menuIdsToArchived = (await Promise.all(menuIdPromise))
+=======
+    const menuIdsToArchive = (await Promise.all(menuIdsPromise))
+>>>>>>> ep-44DarkMode
       .filter((item) => item.count === 1)
       .map((item) => item.menuId);
 
     const addonCategoryIds = (
       await prisma.menuAddonCategory.findMany({
+<<<<<<< HEAD
         where: { menuId: { in: menuIdsToArchived }, isArchived: false },
       })
     ).map((item) => item.addonCategoryId);
@@ -175,6 +228,35 @@ export default async function handler(
       .filter((item) => item.count === 1)
       .map((item) => item.addonCategoryId);
     for (const menuId of menuIdsToArchived) {
+=======
+        where: { menuId: { in: menuIdsToArchive }, isArchived: false },
+      })
+    ).map((item) => item.addonCategoryId);
+
+    const addonCategoryIdsPromise = addonCategoryIds.map(
+      async (addonCategoryId) => {
+        const addonCategoryMenuIds = (
+          await prisma.menuAddonCategory.findMany({
+            where: {
+              addonCategoryId,
+              isArchived: false,
+            },
+          })
+        ).map((item) => item.menuId);
+        return addonCategoryMenuIds.every((item) =>
+          menuIdsToArchive.includes(item)
+        )
+          ? addonCategoryId
+          : undefined;
+      }
+    );
+
+    const addonCategoryIdsToArchive = (
+      await Promise.all(addonCategoryIdsPromise)
+    ).filter((item) => item !== undefined);
+
+    for (const menuId of menuIdsToArchive) {
+>>>>>>> ep-44DarkMode
       await prisma.menu.updateMany({
         data: { isArchived: true },
         where: { id: menuId },
@@ -206,6 +288,10 @@ export default async function handler(
     });
     return res.status(200).send("Deleted.");
   }
+<<<<<<< HEAD
 
   res.status(405).send("Method not allowed");
+=======
+  res.status(405).send("Method now allowed.");
+>>>>>>> ep-44DarkMode
 }

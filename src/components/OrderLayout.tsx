@@ -34,16 +34,26 @@ const OrderLayout = (props: Props) => {
   }, [tableId, dispatch]);
 
   return (
-    <Box>
-      <OrderAppHeader cartItemCount={cartItems.length} />
+    <>
       <Box
         sx={{
-          position: "relative",
+          height: isHome ? 260 : 10,
+        }}
+      >
+        <OrderAppHeader cartItemCount={cartItems.length} />
+      </Box>
+      <Box
+        sx={{
           top: isHome ? { sm: 240 } : 0,
           mb: 10,
         }}
       >
-        <Box sx={{ width: { xs: "100%", md: "80%", lg: "55%" }, m: "0 auto" }}>
+        <Box
+          sx={{
+            width: { xs: "100%", md: "80%", lg: "55%", mb: 10 },
+            m: "0 auto",
+          }}
+        >
           {props.children}
         </Box>
       </Box>
@@ -73,7 +83,7 @@ const OrderLayout = (props: Props) => {
           </Typography>
         </Box>
       )}
-    </Box>
+    </>
   );
 };
 

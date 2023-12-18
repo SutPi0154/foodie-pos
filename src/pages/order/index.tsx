@@ -44,6 +44,7 @@ const OrderApp = () => {
   };
 
   return (
+<<<<<<< HEAD
     <Box sx={{ position: "relative" }}>
       <Box sx={{ position: "fixed", zIndex: 5, px: 2, mb: 5, top: 0 }}>
         <Tabs
@@ -105,6 +106,70 @@ const OrderApp = () => {
         >
           {renderMenus()}
         </Box>
+=======
+    <Box sx={{ position: "relative", zIndex: 5, px: 2 }}>
+      <Tabs
+        TabIndicatorProps={{}}
+        value={value}
+        onChange={(evt, value) => setValue(value)}
+        variant="scrollable"
+        sx={{
+          ".Mui-selected": {
+            color: "",
+            hover: {
+              "&:hover": {
+                color: "green !important",
+              },
+            },
+
+            fontWeight: "bold",
+          },
+          width: {
+            // xs: "350px",
+            // sm: "650px",
+            // md: "780px",
+            // lg: "900px",
+            // xl: "1000px",
+          },
+          bgcolor: "container.main",
+        }}
+      >
+        {menuCategories.map((item) => {
+          return (
+            <Tab
+              key={item.id}
+              label={item.name}
+              sx={{}}
+              onClick={() => setSelectedMenuCategory(item)}
+            />
+          );
+        })}
+      </Tabs>
+      <Box
+        sx={{
+          pt: 2,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: {
+            xs: "center",
+            sm: "center",
+            md: "center",
+            lg: "start",
+          },
+          height: "70vh",
+          my: 4,
+          // width: {
+          //   xs: "350px",
+          //   sm: "650px",
+          //   md: "780px",
+          //   lg: "900px",
+          //   xl: "1000px",
+          // },
+          gap: 2,
+        }}
+      >
+        {renderMenus()}
+>>>>>>> ep-44DarkMode
       </Box>
     </Box>
   );

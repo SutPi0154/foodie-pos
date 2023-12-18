@@ -31,10 +31,11 @@ const ActiveOrder = () => {
   return (
     <Box
       sx={{
-        top: { xs: 30, sm: 150 },
+        top: { xs: 30, sm: 10 },
         position: "relative",
         zIndex: 5,
         px: 2,
+        my: 10,
       }}
     >
       <Box

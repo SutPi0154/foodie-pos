@@ -29,7 +29,7 @@ export const fileUpload = multer({
 }).array("files", 1);
 
 export const generateLinkForQRCode = (tableId: number) => {
-  return `${config.orderAppUrl}?tableId=${tableId}`;
+  return `${config.backOfficeApiUrl}?tableId=${tableId}`;
 };
 
 export const getQrCodeUrl = (tableId: number) => {
