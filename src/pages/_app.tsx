@@ -70,7 +70,6 @@ export default function App({ Component, pageProps }: AppProps) {
             <SnackBar />
           </Layout>
           <CssBaseline />
-          {/* <SpeedInsights /> */}
         </ThemeProvider>
       </Provider>
     </SessionProvider>
