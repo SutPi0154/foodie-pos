@@ -11,13 +11,9 @@ export default async function handler(
   // return res.status(200).send("Ok");
   if (method === "POST") {
     const { name, locationId } = req.body;
-<<<<<<< HEAD
     const isValid = name.trim() !== "" && locationId;
     if (!isValid) return res.status(400).send("bad request");
-=======
-    const isValid = name && locationId;
-    if (!isValid) return res.status(400).send("Bad request.");
->>>>>>> ep-44DarkMode
+
     const table = await prisma.table.create({
       data: { name, locationId, assetUrl: "" },
     });
