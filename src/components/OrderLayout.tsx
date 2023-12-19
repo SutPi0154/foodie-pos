@@ -57,7 +57,7 @@ const OrderLayout = (props: Props) => {
           {props.children}
         </Box>
       </Box>
-      {showActiveOrderFooterBar && (
+      {showActiveOrderFooterBar ? (
         <Box
           sx={{
             height: 50,
@@ -82,6 +82,8 @@ const OrderLayout = (props: Props) => {
             You have active order. Click here to view.
           </Typography>
         </Box>
+      ) : (
+        <></>
       )}
     </>
   );

@@ -24,32 +24,38 @@ import {
 } from "@mui/material";
 import { Menu } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const AddonCategoryDetail = () => {
   const router = useRouter();
   const addonCategoryId = Number(router.query.id);
-  const addonCategories = useAppSelector((state) => state.addonCategory.items);
-  const menuAddonCategories = useAppSelector(
-    (state) => state.menuAddonCategory.items
-  );
-  const menus = useAppSelector((state) => state.menu.items);
+  const addonCategories = useAppSelector((store) => store.addonCategory.items);
+  const menus = useAppSelector((store) => store.menu.items);
   const addonCategory = addonCategories.find(
     (item) => item.id === addonCategoryId
   );
-  const currentMenuAddonCategories = menuAddonCategories.filter(
-    (item) => item.addonCategoryId === addonCategoryId
+  const menuAddonCategories = useAppSelector(
+    (store) => store.menuAddonCategory.items
   );
-  const menuIds = currentMenuAddonCategories.map((item) => item.menuId);
+
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<UpdateAddonCategoryOptions>();
-  const dispatch = useAppDispatch();
+
+  const CurrentMenuAddonCategories = useMemo(() => {
+    return menuAddonCategories.filter(
+      (item) => item.addonCategoryId === addonCategoryId
+    );
+  }, [addonCategoryId, menuAddonCategories]);
 
   useEffect(() => {
     if (addonCategory) {
+      const menuIds = CurrentMenuAddonCategories.map((item) => item.menuId);
       setData({ ...addonCategory, menuIds });
     }
-  }, [addonCategory]);
+  }, [CurrentMenuAddonCategories, addonCategory]);
+
+  const dispatch = useAppDispatch();
+
   if (!addonCategory || !data) return null;
 
   const handleDeleteAddonCategory = () => {

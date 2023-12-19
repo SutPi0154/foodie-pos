@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 const MenuDetail = () => {
   const router = useRouter();
@@ -51,23 +51,34 @@ const MenuDetail = () => {
     (state) => state.disableLocationMenu.items
   );
 
+  const CurrentMenuCategoryMenu = useMemo(() => {
+    return menuCategoryMenus.filter((item) => item.menuId === menuId);
+  }, [menuCategoryMenus, menuId]);
+  const disableLocationMenu = useAppSelector(
+    (store) => store.disableLocationMenu.items
+  );
+
   useEffect(() => {
+    const selectedLocationId = Number(
+      localStorage.getItem("selectedLocationId")
+    );
     if (menu) {
-      const selectedLocationId = Number(
-        localStorage.getItem("selectedLocationId")
-      );
-      const disabledLocationMenu = disabledLocationMenus.find(
+      const isDisable = disableLocationMenu.find(
         (item) =>
-          item.locationId === selectedLocationId && item.menuId === menuId
+          item?.locationId === selectedLocationId && item.menuId === menuId
+      );
+      const menuCategoryIds = CurrentMenuCategoryMenu.map(
+        (item) => item.menuCategoryId
       );
       setData({
         ...menu,
         menuCategoryIds,
         locationId: selectedLocationId,
-        isAvailable: disabledLocationMenu ? false : true,
+        isAvailable: isDisable ? false : true,
       });
     }
-  }, [menu, disabledLocationMenus]);
+  }, [menu, CurrentMenuCategoryMenu, disableLocationMenu, menuId]);
+
   if (!menu || !data) {
     return (
       <Box

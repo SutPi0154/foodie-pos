@@ -43,12 +43,12 @@ const SideBar = () => {
           >
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemIcon sx={{ color: "info.main" }}>
+                <ListItemIcon sx={{ color: "textSecondary.main" }}>
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText
                   primary={item.label}
-                  sx={{ color: "info.main" }}
+                  sx={{ color: "textSecondary.main" }}
                 ></ListItemText>
               </ListItemButton>
             </ListItem>
@@ -68,11 +68,11 @@ const SideBar = () => {
           >
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemIcon sx={{ color: "info.main" }}>
+                <ListItemIcon sx={{ color: "textSecondary.main" }}>
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText
-                  sx={{ color: "info.main" }}
+                  sx={{ color: "textSecondary.main" }}
                   primary={item.label}
                 />
               </ListItemButton>
