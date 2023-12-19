@@ -7,7 +7,11 @@ import { MenuCategory } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-const OrderApp = () => {
+interface Props {
+  isDarkMode: boolean;
+  setDarkMode: (DarkMode: boolean) => void;
+}
+const OrderApp = ({ isDarkMode, setDarkMode }: Props) => {
   const { isReady, ...router } = useRouter();
   const query = router.query;
   const tableId = query.tableId as string;

@@ -44,17 +44,10 @@ export default async function handler(
       data: { name, price, assetUrl },
       where: { id },
     });
-<<<<<<< HEAD
     const location = await prisma.location.findFirst({
       where: { id: locationId },
     });
-    //delete menuCategoryMenu
-=======
-    /*  if (exist.assetUrl && exist.assetUrl !== assetUrl) {
-      await deleteOldMenuImage(assetUrl);
-    } */
-    // update menuCategoryMenu table
->>>>>>> ep-44DarkMode
+
     await prisma.menuCategoryMenu.deleteMany({ where: { menuId: id } });
     const menuCategoryMenusData: { menuId: number; menuCategoryId: number }[] =
       menuCategoryIds.map((item: number) => ({
@@ -88,13 +81,10 @@ export default async function handler(
         });
       }
     }
-<<<<<<< HEAD
 
-=======
-    const location = await prisma.location.findFirst({
-      where: { id: locationId },
-    });
->>>>>>> ep-44DarkMode
+    // const location = await prisma.location.findFirst({
+    //   where: { id: locationId },
+    // });
     const allMenuCategoryIds = (
       await prisma.menuCategory.findMany({
         where: { companyId: location?.companyId },

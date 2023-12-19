@@ -13,7 +13,11 @@ const Layout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const isOrderApp = tableId;
   const isBackOfficeApp = router.pathname.includes("/back-office");
   if (isOrderApp) {
-    return <OrderLayout isDarkMode={isDarkMode}>{children}</OrderLayout>;
+    return (
+      <OrderLayout isDarkMode={isDarkMode} setDarkMode={setDarkMode}>
+        {children}
+      </OrderLayout>
+    );
   }
 
   if (isBackOfficeApp) {

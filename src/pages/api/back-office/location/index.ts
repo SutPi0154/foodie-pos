@@ -8,15 +8,9 @@ export default async function handler(
 ) {
   const method = req.method;
   if (method == "POST") {
-<<<<<<< HEAD
-    const { name, city, township, street, companyId } = req.body;
-=======
-    // const { name, city, township, street } = req.body;
-
     // if (!isValid)
     const { name, street, township, city, companyId } = req.body;
     // data validation
->>>>>>> ep-44DarkMode
     const isValid =
       name.trim() !== "" &&
       city.trim() !== "" &&

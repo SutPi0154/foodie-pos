@@ -7,10 +7,12 @@ import { useEffect } from "react";
 import OrderAppHeader from "./OrderAppHeader";
 
 interface Props {
+  isDarkMode: boolean;
+  setDarkMode: (isDarkMode: boolean) => void;
   children: string | JSX.Element | JSX.Element[];
 }
 
-const OrderLayout = (props: Props) => {
+const OrderLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const router = useRouter();
   const { tableId } = router.query;
   const dispatch = useAppDispatch();
@@ -54,7 +56,7 @@ const OrderLayout = (props: Props) => {
             m: "0 auto",
           }}
         >
-          {props.children}
+          {children}
         </Box>
       </Box>
       {showActiveOrderFooterBar ? (
