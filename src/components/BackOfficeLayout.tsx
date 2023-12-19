@@ -19,13 +19,13 @@ const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const { init } = useAppSelector((store) => store.app);
 
   useEffect(() => {
-    if (session) {
+    if (session && init) {
       dispatch(fetchAppData({}));
     }
     if (!session) {
       router.push("/back-office");
     }
-  }, [session, dispatch, router]);
+  }, [session, dispatch, router, init]);
 
   return (
     <Box sx={{ height: "100%" }}>
