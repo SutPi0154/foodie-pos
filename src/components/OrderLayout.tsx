@@ -28,6 +28,7 @@ const OrderLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
         item.status === ORDERSTATUS.COOKING ||
         item.status === ORDERSTATUS.PENDING
     );
+  const { init } = useAppSelector((store) => store.app);
 
   useEffect(() => {
     if (tableId) {

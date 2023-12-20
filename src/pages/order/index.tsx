@@ -27,7 +27,6 @@ const OrderApp = ({ isDarkMode, setDarkMode }: Props) => {
   useEffect(() => {
     if (menuCategories.length) {
       setSelectedMenuCategory(menuCategories[0]);
-      console.log("menu category render");
     }
   }, [menuCategories]);
 

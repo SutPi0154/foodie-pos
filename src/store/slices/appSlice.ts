@@ -44,30 +44,48 @@ export const fetchAppData = createAsyncThunk(
         company,
         user,
       } = appData;
-
-      thunkApi.dispatch(setLocations(locations));
-      if (!localStorage.getItem("selectedLocationId")) {
-        localStorage.setItem("selectedLocationId", locations[0].id);
+      if (tableId) {
+        thunkApi.dispatch(setInit(true));
+        thunkApi.dispatch(setMenuCategories(menuCategories));
+        thunkApi.dispatch(setMenus(menus));
+        thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenus));
+        thunkApi.dispatch(setAddons(addons));
+        thunkApi.dispatch(setAddonCategories(addonCategories));
+        thunkApi.dispatch(setTables(tables));
+        thunkApi.dispatch(setDisableLocationMenus(disabledLocationMenus));
+        thunkApi.dispatch(
+          setDisableLocationMenuCategories(disabledLocationMenuCategories)
+        );
+        thunkApi.dispatch(setMenuAddonCategory(menuAddonCategories));
+        thunkApi.dispatch(setOrders(orders));
+        thunkApi.dispatch(setCompany(company));
+        thunkApi.dispatch(setUser(user));
+        onSuccess && onSuccess();
+      } else {
+        if (!localStorage.getItem("selectedLocationId")) {
+          localStorage.setItem("selectedLocationId", locations[0].id);
+        }
+        thunkApi.dispatch(setInit(true));
+        thunkApi.dispatch(setLocations(locations));
+        thunkApi.dispatch(setMenuCategories(menuCategories));
+        thunkApi.dispatch(setMenus(menus));
+        thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenus));
+        thunkApi.dispatch(setAddons(addons));
+        thunkApi.dispatch(setAddonCategories(addonCategories));
+        thunkApi.dispatch(setTables(tables));
+        thunkApi.dispatch(setDisableLocationMenus(disabledLocationMenus));
+        thunkApi.dispatch(
+          setDisableLocationMenuCategories(disabledLocationMenuCategories)
+        );
+        thunkApi.dispatch(setMenuAddonCategory(menuAddonCategories));
+        thunkApi.dispatch(setOrders(orders));
+        thunkApi.dispatch(setCompany(company));
+        thunkApi.dispatch(setUser(user));
+        onSuccess && onSuccess();
       }
-      thunkApi.dispatch(setInit(true));
-      thunkApi.dispatch(setMenuCategories(menuCategories));
-      thunkApi.dispatch(setMenus(menus));
-      thunkApi.dispatch(setMenuCategoryMenus(menuCategoryMenus));
-      thunkApi.dispatch(setAddons(addons));
-      thunkApi.dispatch(setAddonCategories(addonCategories));
-      thunkApi.dispatch(setTables(tables));
-      thunkApi.dispatch(setDisableLocationMenus(disabledLocationMenus));
-      thunkApi.dispatch(
-        setDisableLocationMenuCategories(disabledLocationMenuCategories)
-      );
-      thunkApi.dispatch(setMenuAddonCategory(menuAddonCategories));
-      thunkApi.dispatch(setOrders(orders));
-      thunkApi.dispatch(setCompany(company));
-      thunkApi.dispatch(setUser(user));
-
-      onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
+      console.log(err);
     }
   }
 );
