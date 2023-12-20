@@ -1,50 +1,35 @@
 import { useAppSelector } from "@/store/hooks";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import Home from "@mui/icons-material/Home";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
 
 interface Props {
   cartItemCount: number;
+  isDarkMode: boolean;
+  setDarkMode: (isDarkMode: boolean) => void;
 }
 
-const OrderAppHeader = ({ cartItemCount }: Props) => {
+const OrderAppHeader = ({ cartItemCount, isDarkMode, setDarkMode }: Props) => {
   const router = useRouter();
   const isHome = router.pathname === "/order";
   const isCart = router.pathname === "/order/cart";
   const isActiveOrder = router.pathname.includes("/order/active-order");
   const isCartOrActiveOrderPage = isCart || isActiveOrder;
   const company = useAppSelector((state) => state.company.item);
-
+  const handleThemeToggle = () => {
+    setDarkMode(!isDarkMode);
+  };
   return (
     <>
       <Box
         sx={{
-          bgcolor: "success.main",
-          width: "100%",
-          display: { xs: "flex", sm: "none" },
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          sx={{
-            fontWeight: "bold",
-            color: "info.main",
-          }}
-        >
-          {company?.name}
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          width: "100vw",
-          display: { xs: "none", sm: "flex" },
+          display: { xs: "none", sm: "flex", mb: 4 },
           flexDirection: "column",
           alignItems: "center",
-          zIndex: 5,
-          top: 0,
         }}
       >
         <Box
@@ -96,9 +81,15 @@ const OrderAppHeader = ({ cartItemCount }: Props) => {
             </>
           )}
         </Box>
-
+        <IconButton
+          color="inherit"
+          sx={{ cursor: "pointer", zIndex: 10 }}
+          onClick={handleThemeToggle}
+        >
+          {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
         {isHome && (
-          <Box sx={{ position: "absolute" }}>
+          <Box>
             <Box sx={{ textAlign: "center" }}>
               <Typography
                 variant="h3"

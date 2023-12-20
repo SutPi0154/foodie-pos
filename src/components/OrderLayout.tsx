@@ -43,7 +43,11 @@ const OrderLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
           height: isHome ? 260 : 10,
         }}
       >
-        <OrderAppHeader cartItemCount={cartItems.length} />
+        <OrderAppHeader
+          isDarkMode={isDarkMode}
+          setDarkMode={setDarkMode}
+          cartItemCount={cartItems.length}
+        />
       </Box>
       <Box
         sx={{

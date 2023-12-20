@@ -13,19 +13,20 @@ interface Props {
   setDarkMode: () => void;
 }
 const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { init } = useAppSelector((store) => store.app);
 
   useEffect(() => {
-    if (session) {
+    if (session && !init) {
       dispatch(fetchAppData({}));
     }
-    if (!session) {
+    if (!session && router.pathname !== "/back-office") {
       router.push("/back-office");
     }
-  }, [session, dispatch, router]);
+  }, [session, init, dispatch, router]);
 
   return (
     <Box sx={{ height: "100%" }}>

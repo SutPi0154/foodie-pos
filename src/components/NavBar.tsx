@@ -20,12 +20,12 @@ import Image from "next/image";
 import { useState } from "react";
 import SideBar from "./SideBar";
 
-interface ThemeToggleProps {
+interface Props {
   isDarkMode: boolean;
   setDarkMode: (darkMode: boolean) => void;
 }
 
-const NavBar: React.FC<ThemeToggleProps> = ({ isDarkMode, setDarkMode }) => {
+const NavBar = ({ isDarkMode, setDarkMode }: Props) => {
   const { data } = useSession();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const locations = useAppSelector((store) => store.location.items);
