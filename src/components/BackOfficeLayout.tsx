@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -33,20 +32,20 @@ const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
       router.push("/back-office");
     }
   }, [session, init, dispatch, router, status]);
-  if (!init && !session) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "85vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (!init) {
+  //   return (
+  //     <Box
+  //       sx={{
+  //         display: "flex",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         height: "85vh",
+  //       }}
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
   return (
     <Box sx={{ height: "100%" }}>
       <NavBar isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
