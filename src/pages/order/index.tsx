@@ -56,16 +56,9 @@ const OrderApp = ({ isDarkMode, setDarkMode }: Props) => {
         variant="scrollable"
         sx={{
           ".Mui-selected": {
-            color: "",
-            hover: {
-              "&:hover": {
-                color: "green !important",
-              },
-            },
-
             fontWeight: "bold",
           },
-          bgcolor: "container.main",
+          bgcolor: "secondary.main",
         }}
       >
         {menuCategories.map((item) => {

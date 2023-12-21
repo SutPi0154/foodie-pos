@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -18,16 +19,34 @@ const BackOfficeLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { init } = useAppSelector((store) => store.app);
-
   useEffect(() => {
+    // Check if the session is still loading
+    if (status === "loading") {
+      return;
+    }
+    // Check if session exists and init is false
     if (session && !init) {
       dispatch(fetchAppData({}));
     }
-    if (!session && router.pathname !== "/back-office") {
+    // Check if no session, not on back-office page, and init is false
+    if (!session && router.pathname !== "/back-office" && !init) {
       router.push("/back-office");
     }
-  }, [session, init, dispatch, router]);
-
+  }, [session, init, dispatch, router, status]);
+  if (!init && !session) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "85vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <Box sx={{ height: "100%" }}>
       <NavBar isDarkMode={isDarkMode} setDarkMode={setDarkMode} />

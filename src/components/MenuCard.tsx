@@ -31,6 +31,7 @@ const MenuCard = ({ menu, href, isAvailable }: Props) => {
           image={menu.assetUrl || "/default-menu.png"}
           component={"div"}
         ></CardMedia>
+
         <CardContent>
           <Typography gutterBottom variant="h6" sx={{ mb: 0 }}>
             {menu.name}

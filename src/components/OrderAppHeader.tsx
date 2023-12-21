@@ -2,10 +2,12 @@ import { useAppSelector } from "@/store/hooks";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import Home from "@mui/icons-material/Home";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Drawer, IconButton, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import React from "react";
+
+import React, { useState } from "react";
 
 interface Props {
   cartItemCount: number;
@@ -18,101 +20,221 @@ const OrderAppHeader = ({ cartItemCount, isDarkMode, setDarkMode }: Props) => {
   const isHome = router.pathname === "/order";
   const isCart = router.pathname === "/order/cart";
   const isActiveOrder = router.pathname.includes("/order/active-order");
+  const [drawer, setOpenDrawer] = useState(false);
   const isCartOrActiveOrderPage = isCart || isActiveOrder;
   const company = useAppSelector((state) => state.company.item);
   const handleThemeToggle = () => {
     setDarkMode(!isDarkMode);
   };
+
   return (
-    <>
+    <Box>
       <Box
         sx={{
-          display: { xs: "none", sm: "flex", mb: 4 },
-          flexDirection: "column",
+          display: "flex",
+          justifyContent: "space-between",
           alignItems: "center",
+          bgcolor: "secondary.main",
+          px: 10,
         }}
       >
+        <Box>
+          <Typography
+            sx={{ color: "primary.main", fontWeight: "bold", fontSize: 25 }}
+          >
+            Foodie Pos
+          </Typography>
+        </Box>
         <Box
           sx={{
-            position: "absolute",
-            top: 10,
-            right: { xs: 40, md: 80, lg: 200 },
-            cursor: "pointer",
+            display: { xs: "none", md: "flex" },
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
           }}
         >
-          {isCartOrActiveOrderPage ? (
-            <Home
-              onClick={() =>
-                router.push({
-                  pathname: "/order",
-                  query: { tableId: router.query.tableId },
-                })
-              }
-              sx={{
-                fontSize: "40px",
-                color: "primary.light",
-              }}
+          <Box sx={{ height: "30%" }}>
+            <TextField
+              label="Search...."
+              type="search"
+              sx={{ my: 1 }}
+              variant="filled"
             />
-          ) : (
-            <>
-              <ShoppingCartCheckoutIcon
+          </Box>
+          <Box
+            sx={{
+              cursor: "pointer",
+            }}
+          >
+            {isCartOrActiveOrderPage ? (
+              <Home
                 onClick={() =>
-                  router.push({ pathname: "/order/cart", query: router.query })
+                  router.push({
+                    pathname: "/order",
+                    query: { tableId: router.query.tableId },
+                  })
                 }
                 sx={{
                   fontSize: "40px",
                   color: "primary.light",
                 }}
               />
-              {cartItemCount > 0 && (
-                <Typography
-                  variant="h5"
+            ) : (
+              <>
+                <ShoppingCartCheckoutIcon
+                  onClick={() =>
+                    router.push({
+                      pathname: "/order/cart",
+                      query: router.query,
+                    })
+                  }
                   sx={{
-                    textAlign: "right",
+                    fontSize: "40px",
                     color: "primary.light",
-                    position: "absolute",
-                    top: -10,
-                    right: -10,
                   }}
-                >
-                  {cartItemCount}
-                </Typography>
-              )}
-            </>
-          )}
+                />
+                {cartItemCount > 0 && (
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      textAlign: "right",
+                      color: "primary.light",
+                      position: "absolute",
+                      top: -10,
+                      right: -10,
+                    }}
+                  >
+                    {cartItemCount}
+                  </Typography>
+                )}
+              </>
+            )}
+          </Box>
+          <IconButton
+            color="inherit"
+            sx={{ cursor: "pointer", zIndex: 10 }}
+            onClick={handleThemeToggle}
+          >
+            {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+          </IconButton>
         </Box>
+        <Drawer
+          open={drawer}
+          anchor="top"
+          onClose={() => {
+            setOpenDrawer(false);
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box>
+              <TextField
+                label="Search...."
+                type="search"
+                sx={{ my: 1, width: "80%", mx: "auto" }}
+                variant="filled"
+              />
+            </Box>
+            <Box
+              sx={{
+                cursor: "pointer",
+              }}
+            >
+              {isCartOrActiveOrderPage ? (
+                <Home
+                  onClick={() =>
+                    router.push({
+                      pathname: "/order",
+                      query: { tableId: router.query.tableId },
+                    })
+                  }
+                  sx={{
+                    fontSize: "40px",
+                    color: "primary.light",
+                  }}
+                />
+              ) : (
+                <>
+                  <ShoppingCartCheckoutIcon
+                    onClick={() =>
+                      router.push({
+                        pathname: "/order/cart",
+                        query: router.query,
+                      })
+                    }
+                    sx={{
+                      fontSize: "40px",
+                      color: "primary.light",
+                    }}
+                  />
+                  {cartItemCount > 0 && (
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        textAlign: "right",
+                        color: "primary.light",
+                        position: "absolute",
+                        top: -10,
+                        right: -10,
+                      }}
+                    >
+                      {cartItemCount}
+                    </Typography>
+                  )}
+                </>
+              )}
+            </Box>
+            <IconButton
+              color="inherit"
+              sx={{ cursor: "pointer", zIndex: 10 }}
+              onClick={handleThemeToggle}
+            >
+              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+          </Box>
+        </Drawer>
         <IconButton
           color="inherit"
-          sx={{ cursor: "pointer", zIndex: 10 }}
-          onClick={handleThemeToggle}
+          aria-label="open drawer"
+          edge="end"
+          onClick={() => {
+            // dispatch(setOpenDrawer());
+            setOpenDrawer(true);
+          }}
+          sx={{ display: { sm: "block", md: "none" } }}
         >
-          {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+          <MenuIcon />
         </IconButton>
-        {isHome && (
-          <Box>
-            <Box sx={{ textAlign: "center" }}>
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: "bold",
-                  color: "#4C4C6D",
-                  mt: 15,
-                }}
-              >
-                {company?.name}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ fontStyle: "italic", lineHeight: 1.2 }}
-              >
-                {company?.street}
-                <br /> {company?.township}, {company?.city}
-              </Typography>
-            </Box>
-          </Box>
-        )}
       </Box>
-    </>
+      {isHome && (
+        <Box>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: "bold",
+                color: "#4C4C6D",
+              }}
+            >
+              {company?.name}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontStyle: "italic", lineHeight: 1.2 }}
+            >
+              {company?.street}
+              <br /> {company?.township}, {company?.city}
+            </Typography>
+          </Box>
+        </Box>
+      )}
+    </Box>
   );
 };
 
