@@ -99,7 +99,7 @@ const TableDetail = () => {
       </Box>
       <TextField
         label="name"
-        sx={{ width: { xs: "100%", lg: 400 } }}
+        sx={{ width: { xs: "90%", lg: 400 } }}
         defaultValue={data.name}
         onChange={(e) => {
           setData({ ...data, id: table.id, name: e.target.value });

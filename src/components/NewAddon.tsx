@@ -57,7 +57,9 @@ const NewAddon = ({ open, setOpen }: Props) => {
       }}
     >
       <DialogTitle>Create new Addon </DialogTitle>
-      <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <DialogContent
+        sx={{ display: "flex", flexDirection: "column", gap: 2, width: 350 }}
+      >
         <TextField
           label="name"
           type="text"
@@ -79,7 +81,6 @@ const NewAddon = ({ open, setOpen }: Props) => {
             value={newAddon.addonCategoryId}
             label="addon Category"
             onChange={handleChange}
-            sx={{ width: 400 }}
             renderValue={(selectedAddonCategoryId) => {
               return (
                 addonCategories.find(

@@ -51,49 +51,48 @@ const NewTable = ({ open, setOpen }: Props) => {
       }}
     >
       <DialogTitle>Create new Table </DialogTitle>
-      <DialogContent>
-        <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
-          <TextField
-            label="name"
-            type="text"
-            sx={{ mt: 2, width: 400 }}
-            onChange={(e) => {
-              setNewTable({ ...newTable, name: e.target.value });
-            }}
-          />
 
-          <Box
-            sx={{
-              mt: 2,
-              display: "flex",
-              gap: 2,
-              justifyContent: "center",
-              alignItems: "center",
+      <DialogContent
+        sx={{ display: "flex", flexDirection: "column", gap: 2, width: 350 }}
+      >
+        <TextField
+          label="name"
+          type="text"
+          sx={{ mt: 2 }}
+          onChange={(e) => {
+            setNewTable({ ...newTable, name: e.target.value });
+          }}
+        />
+
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            gap: 2,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => {
+              setOpen(false);
             }}
+            sx={{}}
           >
-            <Button
-              variant="contained"
-              color="info"
-              onClick={() => {
-                setOpen(false);
-              }}
-              sx={{}}
-            >
-              cancel
-            </Button>
-            <Button
-              disabled={
-                !newTable || !newTable.locationId || !newTable.name.trim()
-              }
-              variant="contained"
-              onClick={handleCreateTable}
-            >
-              confirm
-            </Button>
-          </Box>
-        </DialogContent>
+            cancel
+          </Button>
+          <Button
+            disabled={
+              !newTable || !newTable.locationId || !newTable.name.trim()
+            }
+            variant="contained"
+            onClick={handleCreateTable}
+          >
+            confirm
+          </Button>
+        </Box>
       </DialogContent>
     </Dialog>
   );

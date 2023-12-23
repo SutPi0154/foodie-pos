@@ -47,12 +47,20 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Create new category</DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+
+          width: { xs: 350 },
+        }}
+      >
         <Box sx={{ mt: 2 }}>
           <TextField
             label="name"
             autoFocus
-            sx={{ width: 400 }}
+            sx={{ width: "100%" }}
             variant="outlined"
             onChange={(e) => {
               setNewMenuCategory({ ...newMenuCategory, name: e.target.value });
@@ -69,7 +77,6 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
           }}
         >
           <Button
-            sx={{}}
             color="info"
             onClick={() => {
               setOpen(false);
@@ -78,12 +85,7 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
           >
             Cancel
           </Button>
-          <Button
-            sx={{}}
-            // disabled={}
-            onClick={handleCreateMenuCategory}
-            variant="contained"
-          >
+          <Button onClick={handleCreateMenuCategory} variant="contained">
             Confirm
           </Button>
         </Box>

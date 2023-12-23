@@ -68,98 +68,93 @@ const NewAddonCategory = ({ open, setOpen }: Props) => {
       }}
     >
       <DialogTitle>Create new Addon Category </DialogTitle>
-      <DialogContent>
-        <Box
+      <DialogContent
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          width: 350,
+        }}
+      >
+        <TextField
+          label="name"
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
+            mt: 2,
           }}
-        >
-          <TextField
-            label="name"
-            sx={{
-              width: 400,
-              mt: 2,
-            }}
-            onChange={(e) => {
-              setNewAddonCategory({
-                ...newAddonCategory,
-                name: e.target.value,
-              });
-            }}
-          />
-          <FormControl fullWidth>
-            <InputLabel>Menus</InputLabel>
+          onChange={(e) => {
+            setNewAddonCategory({
+              ...newAddonCategory,
+              name: e.target.value,
+            });
+          }}
+        />
+        <FormControl fullWidth>
+          <InputLabel>Menus</InputLabel>
 
-            <Select
-              label="Menus"
-              sx={{ width: 400 }}
-              multiple
-              value={newAddonCategory.menuIds}
-              onChange={handleChange}
-              renderValue={(selectMenuIds) => {
-                return selectMenuIds
-                  .map((selectMenuId) => {
-                    return menus.find(
-                      (item) => item.id === selectMenuId
-                    ) as Menu;
-                  })
-                  .map((item) => <Chip label={item.name} key={item.id}></Chip>);
-              }}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 48 * 4.5 + 8,
-                    width: 250,
-                  },
+          <Select
+            label="Menus"
+            multiple
+            value={newAddonCategory.menuIds}
+            onChange={handleChange}
+            renderValue={(selectMenuIds) => {
+              return selectMenuIds
+                .map((selectMenuId) => {
+                  return menus.find((item) => item.id === selectMenuId) as Menu;
+                })
+                .map((item) => <Chip label={item.name} key={item.id}></Chip>);
+            }}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 48 * 4.5 + 8,
+                  width: 250,
                 },
-              }}
-            >
-              {menus.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  <Checkbox
-                    checked={newAddonCategory.menuIds.includes(item.id)}
-                  />
-                  <ListItemText primary={item.name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControlLabel
-            control={<Checkbox defaultChecked={newAddonCategory.isRequired} />}
-            label="is required"
-            onChange={(e, value) => {
-              setNewAddonCategory({
-                ...newAddonCategory,
-                isRequired: value,
-              });
-            }}
-          />
-
-          <Box
-            sx={{
-              mt: 2,
-              display: "flex",
-              gap: 2,
-              justifyContent: "center",
-              alignItems: "center",
+              },
             }}
           >
-            <Button
-              variant="contained"
-              color="info"
-              onClick={() => {
-                setOpen(false);
-                setNewAddonCategory(defaultNewAddonCategory);
-              }}
-            >
-              cancel
-            </Button>
-            <Button variant="contained" onClick={handleCreateNewAddonCategory}>
-              confirm
-            </Button>
-          </Box>
+            {menus.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                <Checkbox
+                  checked={newAddonCategory.menuIds.includes(item.id)}
+                />
+                <ListItemText primary={item.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControlLabel
+          control={<Checkbox defaultChecked={newAddonCategory.isRequired} />}
+          label="is required"
+          onChange={(e, value) => {
+            setNewAddonCategory({
+              ...newAddonCategory,
+              isRequired: value,
+            });
+          }}
+        />
+
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            gap: 2,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => {
+              setOpen(false);
+              setNewAddonCategory(defaultNewAddonCategory);
+            }}
+          >
+            cancel
+          </Button>
+          <Button variant="contained" onClick={handleCreateNewAddonCategory}>
+            confirm
+          </Button>
         </Box>
       </DialogContent>
     </Dialog>

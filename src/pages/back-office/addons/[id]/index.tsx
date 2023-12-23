@@ -129,10 +129,9 @@ const AddonDetail = () => {
         }}
         type="number"
       />
-      <FormControl>
+      <FormControl sx={{ width: { xs: "90%", lg: 400 } }}>
         <InputLabel>Addon Category</InputLabel>
         <Select
-          sx={{ width: { xs: "90%", lg: 400 } }}
           onChange={handleChange}
           label="Addon Category"
           value={data.addonCategoryId}

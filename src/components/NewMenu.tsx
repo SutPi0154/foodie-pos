@@ -111,7 +111,6 @@ const NewMenu = ({ open, setOpen }: Props) => {
             value={newMenu.menuCategoryIds}
             label="Menu Category"
             onChange={handleChange}
-            // sx={{ width: 400 }}
             renderValue={(selectMenuCategoryIds) => {
               return selectMenuCategoryIds
                 .map((selectMenuCategoryId) => {

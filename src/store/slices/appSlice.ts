@@ -62,6 +62,8 @@ export const fetchAppData = createAsyncThunk(
         thunkApi.dispatch(setUser(user));
         onSuccess && onSuccess();
       } else {
+        thunkApi.dispatch(setInit(true));
+        thunkApi.dispatch(setLocations(locations));
         if (!localStorage.getItem("selectedLocationId")) {
           localStorage.setItem("selectedLocationId", locations[0].id);
         }
