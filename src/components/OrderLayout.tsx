@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAppData } from "@/store/slices/appSlice";
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { ORDERSTATUS } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -29,13 +29,27 @@ const OrderLayout = ({ children, isDarkMode, setDarkMode }: Props) => {
         item.status === ORDERSTATUS.PENDING
     );
   const { init } = useAppSelector((store) => store.app);
+  console.log(init);
 
   useEffect(() => {
     if (tableId) {
       dispatch(fetchAppData({ tableId: Number(tableId) }));
     }
   }, [tableId, dispatch]);
-
+  if (!init) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "85vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <>
       <Box>

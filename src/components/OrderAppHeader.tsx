@@ -35,7 +35,8 @@ const OrderAppHeader = ({ cartItemCount, isDarkMode, setDarkMode }: Props) => {
           justifyContent: "space-between",
           alignItems: "center",
           bgcolor: "secondary.main",
-          px: 10,
+          px: { xs: 4, lg: 10 },
+          py: { xs: 1 },
         }}
       >
         <Box>
@@ -127,76 +128,37 @@ const OrderAppHeader = ({ cartItemCount, isDarkMode, setDarkMode }: Props) => {
         >
           <Box
             sx={{
-              width: "100%",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <Box>
+            <Box sx={{ width: "80%" }}>
               <TextField
                 label="Search...."
                 type="search"
-                sx={{ my: 1, width: "80%", mx: "auto" }}
+                sx={{ my: 1, width: "100%", mx: "auto" }}
                 variant="filled"
               />
             </Box>
+
             <Box
               sx={{
-                cursor: "pointer",
+                display: "flex",
+                width: "80%",
+                alignItems: "center",
+                // alignSelf: "self-start",
               }}
             >
-              {isCartOrActiveOrderPage ? (
-                <Home
-                  onClick={() =>
-                    router.push({
-                      pathname: "/order",
-                      query: { tableId: router.query.tableId },
-                    })
-                  }
-                  sx={{
-                    fontSize: "40px",
-                    color: "primary.light",
-                  }}
-                />
-              ) : (
-                <>
-                  <ShoppingCartCheckoutIcon
-                    onClick={() =>
-                      router.push({
-                        pathname: "/order/cart",
-                        query: router.query,
-                      })
-                    }
-                    sx={{
-                      fontSize: "40px",
-                      color: "primary.light",
-                    }}
-                  />
-                  {cartItemCount > 0 && (
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        textAlign: "right",
-                        color: "primary.light",
-                        position: "absolute",
-                        top: -10,
-                        right: -10,
-                      }}
-                    >
-                      {cartItemCount}
-                    </Typography>
-                  )}
-                </>
-              )}
+              <Typography>Theme</Typography>
+              <IconButton
+                color="inherit"
+                sx={{ cursor: "pointer", zIndex: 10 }}
+                onClick={handleThemeToggle}
+              >
+                {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+              </IconButton>
             </Box>
-            <IconButton
-              color="inherit"
-              sx={{ cursor: "pointer", zIndex: 10 }}
-              onClick={handleThemeToggle}
-            >
-              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
           </Box>
         </Drawer>
         <IconButton
@@ -214,7 +176,7 @@ const OrderAppHeader = ({ cartItemCount, isDarkMode, setDarkMode }: Props) => {
       </Box>
       {isHome && (
         <Box>
-          <Box sx={{ textAlign: "center" }}>
+          <Box sx={{ textAlign: "center", py: { xs: 2, md: 4 } }}>
             <Typography
               variant="h3"
               sx={{

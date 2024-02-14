@@ -1,4 +1,4 @@
-import { BaseOptions } from "vm";
+import { BaseOptions } from "./app";
 
 export interface UserSlice extends BaseOptions {
   item: User | null;

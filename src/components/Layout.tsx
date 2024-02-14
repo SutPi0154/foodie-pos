@@ -11,6 +11,7 @@ const Layout = ({ children, isDarkMode, setDarkMode }: Props) => {
   const router = useRouter();
   const { tableId } = router.query;
   const isOrderApp = tableId;
+
   const isBackOfficeApp = router.pathname.includes("/back-office");
   if (isOrderApp) {
     return (

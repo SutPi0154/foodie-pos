@@ -91,7 +91,6 @@ interface SidebarItemsType {
   icon: JSX.Element;
   route: string;
 }
-
 export const sideBarItems: SidebarItemsType[] = [
   {
     id: 1,
