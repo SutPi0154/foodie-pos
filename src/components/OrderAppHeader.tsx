@@ -101,8 +101,9 @@ const OrderAppHeader = ({ cartItemCount, isDarkMode, setDarkMode }: Props) => {
                       textAlign: "right",
                       color: "primary.light",
                       position: "absolute",
-                      top: -10,
-                      right: -10,
+                      top: 2,
+                      zIndex: 1000,
+                      right: 80,
                     }}
                   >
                     {cartItemCount}
